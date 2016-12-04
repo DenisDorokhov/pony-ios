@@ -25,7 +25,6 @@ PODS:
   - RxSwift (3.0.1)
   - STRegex (0.4.2)
   - SwiftDate (4.0.7)
-  - SwiftyTimer (2.0.0)
   - Swinject (2.0.0-beta.2)
   - XCGLogger (4.0.0):
     - XCGLogger/Core (= 4.0.0)
@@ -48,7 +47,6 @@ DEPENDENCIES:
   - RxSwift (= 3.0.1)
   - STRegex (= 0.4.2)
   - SwiftDate (= 4.0.7)
-  - SwiftyTimer (= 2.0.0)
   - Swinject (= 2.0.0-beta.2)
   - XCGLogger (= 4.0.0)
 
@@ -81,10 +79,9 @@ SPEC CHECKSUMS:
   RxSwift: af5680055c4ad04480189c52d28385b1029493a6
   STRegex: 9b6e0a4300c8442d1aa93241c895eeec4cc56935
   SwiftDate: 0efb04a6751b1ab804049b2b09a69848cd304c12
-  SwiftyTimer: 2efd74b060d69ad4f1496baf5bbedbe132125fcf
   Swinject: 69a893192efa9f2cc44be79ef423d04d571b6af9
   XCGLogger: 38063ea89b4c8b23232d18efd2e12eb0005f3ea4
 
-PODFILE CHECKSUM: 9db3f6b90d7daad811ed06aad36f14de3648afd3
+PODFILE CHECKSUM: 53b5d4d5eca9e751881ad76593cbd12bba037aeb
 
 COCOAPODS: 1.1.1

@@ -7,7 +7,7 @@ import RxSwift
 import RxBlocking
 
 extension ObservableConvertibleType {
-    public func toBlocking() -> BlockingObservable<E> {
+    public func toTestBlocking() -> BlockingObservable<E> {
         return toBlocking(timeout: 5)
     }
 }

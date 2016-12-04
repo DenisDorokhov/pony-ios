@@ -41,7 +41,7 @@ class ApiServiceSpec: QuickSpec {
             let credentials = Credentials(email: self.DEMO_EMAIL, password: self.DEMO_PASSWORD)
             
             let authenticateAndStoreToken: (Credentials) -> Authentication = {
-                let authentication = try! service.authenticate(credentials: $0).toBlocking().first()!
+                let authentication = try! service.authenticate(credentials: $0).toTestBlocking().first()!
                 service.tokenPairDao.store(tokenPair: TokenPair(authentication: authentication))
                 return authentication
             }
@@ -49,64 +49,64 @@ class ApiServiceSpec: QuickSpec {
             it("should handle errors") {
                 service.restUrlDao = ApiUrlDaoMock(url: "http://notExistingDomain")
                 expect { 
-                    try service.getInstallation().toBlocking().first() 
+                    try service.getInstallation().toTestBlocking().first() 
                 }.to(throwError(errorType: ApiError.self))
             }
 
             it("should get installation") {
-                let installation = try! service.getInstallation().toBlocking().first()
+                let installation = try! service.getInstallation().toTestBlocking().first()
                 expect(installation).toNot(beNil())
             }
 
             it("should authenticate") {
-                let authentication = try! service.authenticate(credentials: credentials).toBlocking().first()
+                let authentication = try! service.authenticate(credentials: credentials).toTestBlocking().first()
                 expect(authentication).toNot(beNil())
             }
 
             it("should logout") {
                 _ = authenticateAndStoreToken(credentials)
-                let user = try! service.logout().toBlocking().first()
+                let user = try! service.logout().toTestBlocking().first()
                 expect(user).toNot(beNil())
             }
 
             it("should get current user") {
                 _ = authenticateAndStoreToken(credentials)
-                let user = try! service.getCurrentUser().toBlocking().first()
+                let user = try! service.getCurrentUser().toTestBlocking().first()
                 expect(user).toNot(beNil())
             }
 
             it("should refresh token") {
                 _ = authenticateAndStoreToken(credentials)
-                let authentication = try! service.refreshToken().toBlocking().first()
+                let authentication = try! service.refreshToken().toTestBlocking().first()
                 expect(authentication).toNot(beNil())
             }
 
             it("should get artists") {
                 _ = authenticateAndStoreToken(credentials)
-                let artists = try! service.getArtists().toBlocking().first()!
+                let artists = try! service.getArtists().toTestBlocking().first()!
                 expect(artists).toNot(beNil())
             }
 
             it("should get artist albums") {
                 _ = authenticateAndStoreToken(credentials)
-                let artists = try! service.getArtists().toBlocking().first()!
-                let artistAlbums = try! service.getArtistAlbums(artistId: artists[0].id).toBlocking().first()!
+                let artists = try! service.getArtists().toTestBlocking().first()!
+                let artistAlbums = try! service.getArtistAlbums(artistId: artists[0].id).toTestBlocking().first()!
                 expect(artistAlbums).toNot(beNil())
             }
 
             it("should download image") {
                 _ = authenticateAndStoreToken(credentials)
-                let artists = try! service.getArtists().toBlocking().first()!
-                let image = try! service.downloadImage(atUrl: artists[0].artworkUrl!).toBlocking().first()!
+                let artists = try! service.getArtists().toTestBlocking().first()!
+                let image = try! service.downloadImage(atUrl: artists[0].artworkUrl!).toTestBlocking().first()!
                 expect(image).toNot(beNil())
             }
 
             it("should download song") {
                 _ = authenticateAndStoreToken(credentials)
-                let artists = try! service.getArtists().toBlocking().first()!
-                let artistAlbums = try! service.getArtistAlbums(artistId: artists[0].id).toBlocking().first()!
+                let artists = try! service.getArtists().toTestBlocking().first()!
+                let artistAlbums = try! service.getArtistAlbums(artistId: artists[0].id).toTestBlocking().first()!
                 let filePath = FileUtils.generateTemporaryPath()
-                let progresses = try! service.downloadSong(atUrl: artistAlbums.albums[0].songs[0].url, toFile: filePath).toBlocking().toArray()
+                let progresses = try! service.downloadSong(atUrl: artistAlbums.albums[0].songs[0].url, toFile: filePath).toTestBlocking().toArray()
                 expect(progresses.count).to(beGreaterThan(0))
                 expect(progresses.last).to(equal(1))
                 expect(FileManager.default.fileExists(atPath: filePath)).to(beTrue())

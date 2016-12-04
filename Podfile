@@ -19,7 +19,6 @@ target 'Pony' do
   pod 'RxSwift', '3.0.1'
   pod 'STRegex', '0.4.2'
   pod 'SwiftDate', '4.0.7'
-  pod 'SwiftyTimer', '2.0.0'
   pod 'Swinject', '2.0.0-beta.2'
   pod 'XCGLogger', '4.0.0'
 

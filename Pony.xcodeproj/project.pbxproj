@@ -12,6 +12,12 @@
 		26F222FB1DC6373F003132AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26F222F91DC6373F003132AE /* LaunchScreen.storyboard */; };
 		26F222FC1DC6373F003132AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26F222FA1DC6373F003132AE /* Main.storyboard */; };
 		375B714FFF8A4DDB63CEA02E /* ObservableConvertibleType+PonyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7BCB4007B42FE53F4D9B /* ObservableConvertibleType+PonyTests.swift */; };
+		375B7223D7812DA1162F0829 /* ApiServiceCached.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B702814F8087D885789CE /* ApiServiceCached.swift */; };
+		375B745ED7DBB850ECA0FA68 /* HanekeCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7356F5C2315E1F1978BA /* HanekeCache.swift */; };
+		375B74DC16AE755F17F8EE4E /* ApiServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7A23F11D5F2C1F03083E /* ApiServiceMock.swift */; };
+		375B74FF0B214EB33D84C247 /* ApiServiceCachedSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B770FECE9AF15BA7F56B9 /* ApiServiceCachedSpec.swift */; };
+		375B78F91A46091F494CBC1F /* CacheProviderMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7DD9654C7C15F8D507FF /* CacheProviderMock.swift */; };
+		375B7C444BFF0E022536ADF1 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B714FE45E2B27A41661AF /* Cache.swift */; };
 		52E5A214F285D81E58937FB4 /* Pods_PonyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5401BAD89B9B43540D25D060 /* Pods_PonyTests.framework */; };
 		B3D3902E7893D46D205ACE20 /* ApiUrlDaoSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D3993F2CA6FF180C29CBAF /* ApiUrlDaoSpec.swift */; };
 		B3D39065FE2FD5E479605B9D /* GenreRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D399253660454872AC4BC4 /* GenreRealm.swift */; };
@@ -72,7 +78,13 @@
 		26F222F91DC6373F003132AE /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		26F222FA1DC6373F003132AE /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		32217CC6C4FE381CF32CA210 /* Pods-PonyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PonyTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PonyTests/Pods-PonyTests.debug.xcconfig"; sourceTree = "<group>"; };
+		375B702814F8087D885789CE /* ApiServiceCached.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiServiceCached.swift; sourceTree = "<group>"; };
+		375B714FE45E2B27A41661AF /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		375B7356F5C2315E1F1978BA /* HanekeCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HanekeCache.swift; sourceTree = "<group>"; };
+		375B770FECE9AF15BA7F56B9 /* ApiServiceCachedSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiServiceCachedSpec.swift; sourceTree = "<group>"; };
+		375B7A23F11D5F2C1F03083E /* ApiServiceMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiServiceMock.swift; sourceTree = "<group>"; };
 		375B7BCB4007B42FE53F4D9B /* ObservableConvertibleType+PonyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObservableConvertibleType+PonyTests.swift"; sourceTree = "<group>"; };
+		375B7DD9654C7C15F8D507FF /* CacheProviderMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheProviderMock.swift; sourceTree = "<group>"; };
 		5401BAD89B9B43540D25D060 /* Pods_PonyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PonyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4D845E27C8DACCAB30431C0 /* Pods-Pony.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pony.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pony/Pods-Pony.debug.xcconfig"; sourceTree = "<group>"; };
 		B3D390847FA0DCD25F55669E /* RealmContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmContext.swift; sourceTree = "<group>"; };
@@ -226,6 +238,8 @@
 			children = (
 				B3D3937A4CF9CE5A1E945DA3 /* ApiUrlDaoMock.swift */,
 				B3D393A2E2DCE8BE452B5E53 /* TokenPairDaoMock.swift */,
+				375B7DD9654C7C15F8D507FF /* CacheProviderMock.swift */,
+				375B7A23F11D5F2C1F03083E /* ApiServiceMock.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -277,6 +291,7 @@
 			children = (
 				B3D39C80A6989FF7A68126A2 /* ApiService.swift */,
 				B3D3914EDD635422F22972A1 /* ApiSessionManager.swift */,
+				375B702814F8087D885789CE /* ApiServiceCached.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -290,6 +305,8 @@
 				B3D393C507410E6843E87EC5 /* Log.swift */,
 				B3D392642E763EE7E6F40590 /* RandomUtils.swift */,
 				B3D39BFF235F286FB8F8B306 /* XCGLogDelegate.swift */,
+				375B714FE45E2B27A41661AF /* Cache.swift */,
+				375B7356F5C2315E1F1978BA /* HanekeCache.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -340,6 +357,7 @@
 				B3D39A90BE56AA79A6D785AF /* EventBusSpec.swift */,
 				B3D3993F2CA6FF180C29CBAF /* ApiUrlDaoSpec.swift */,
 				B3D396E7055EC3642CA17602 /* TokenPairDaoSpec.swift */,
+				375B770FECE9AF15BA7F56B9 /* ApiServiceCachedSpec.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -593,6 +611,9 @@
 				B3D39AD064012E68FF73F8A7 /* ApiSessionManager.swift in Sources */,
 				B3D397318B59DA6ED9F49BF9 /* ApiService.swift in Sources */,
 				B3D39A8E0AF74DD1D7953977 /* Response.swift in Sources */,
+				375B7C444BFF0E022536ADF1 /* Cache.swift in Sources */,
+				375B745ED7DBB850ECA0FA68 /* HanekeCache.swift in Sources */,
+				375B7223D7812DA1162F0829 /* ApiServiceCached.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,6 +629,9 @@
 				B3D3961CE0B695418ECC9760 /* TokenPairDaoMock.swift in Sources */,
 				B3D399DFE75F5AF75DC25747 /* ApiServiceSpec.swift in Sources */,
 				375B714FFF8A4DDB63CEA02E /* ObservableConvertibleType+PonyTests.swift in Sources */,
+				375B78F91A46091F494CBC1F /* CacheProviderMock.swift in Sources */,
+				375B74FF0B214EB33D84C247 /* ApiServiceCachedSpec.swift in Sources */,
+				375B74DC16AE755F17F8EE4E /* ApiServiceMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
