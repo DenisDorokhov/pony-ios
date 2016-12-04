@@ -1,0 +1,6 @@
+framework module Pods_Pony {
+  umbrella header "Pods-Pony-umbrella.h"
+
+  export *
+  module * { export * }
+}

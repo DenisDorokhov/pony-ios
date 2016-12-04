@@ -1,0 +1,30 @@
+{
+  "size": 5375146,
+  "discNumber": null,
+  "trackNumber": 11,
+  "id": 19,
+  "updateDate": null,
+  "artistName": "Boxing Fox",
+  "name": "Good lod times",
+  "album": {
+    "name": "The shepherd hates us",
+    "id": 1,
+    "year": 2009,
+    "artwork": 1,
+    "artworkUrl": "http:\/\/pony.dorokhov.net\/demo\/files\/1",
+    "artist": {
+      "name": "Boxing Fox",
+      "id": 1,
+      "artwork": 1,
+      "artworkUrl": "http:\/\/pony.dorokhov.net\/demo\/files\/1"
+    }
+  },
+  "genre": {
+    "name": "(255)",
+    "id": 1,
+    "artwork": 37,
+    "artworkUrl": "http:\/\/pony.dorokhov.net\/demo\/files\/37"
+  },
+  "duration": 222,
+  "url": "http:\/\/pony.dorokhov.net\/demo\/audio\/19"
+}

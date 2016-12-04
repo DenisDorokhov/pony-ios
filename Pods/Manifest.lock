@@ -1,0 +1,90 @@
+PODS:
+  - Alamofire (4.0.1)
+  - AlamofireImage (3.1.0):
+    - Alamofire (~> 4.0)
+  - AlamofireObjectMapper (4.0.0):
+    - Alamofire (~> 4.0)
+    - ObjectMapper (~> 2.0)
+  - HanekeSwift (0.10.1)
+  - KeychainSwift (7.0.0)
+  - Localize-Swift (1.6)
+  - Nimble (5.0.0)
+  - ObjectMapper (2.1.0)
+  - OrderedSet (2.0.4)
+  - Quick (0.10.0)
+  - ReachabilitySwift (3)
+  - Realm (2.0.3):
+    - Realm/Headers (= 2.0.3)
+  - Realm/Headers (2.0.3)
+  - RealmSwift (2.0.3):
+    - Realm (= 2.0.3)
+  - RxBlocking (3.0.1):
+    - RxSwift (~> 3.0)
+  - RxCocoa (3.0.1):
+    - RxSwift (~> 3.0)
+  - RxSwift (3.0.1)
+  - STRegex (0.4.2)
+  - SwiftDate (4.0.7)
+  - SwiftyTimer (2.0.0)
+  - Swinject (2.0.0-beta.2)
+  - XCGLogger (4.0.0):
+    - XCGLogger/Core (= 4.0.0)
+  - XCGLogger/Core (4.0.0)
+
+DEPENDENCIES:
+  - Alamofire (= 4.0.1)
+  - AlamofireImage (= 3.1.0)
+  - AlamofireObjectMapper (= 4.0.0)
+  - HanekeSwift (from `https://github.com/Haneke/HanekeSwift`, branch `feature/swift-3`)
+  - KeychainSwift (= 7.0.0)
+  - Localize-Swift (= 1.6)
+  - Nimble (= 5.0.0)
+  - OrderedSet (= 2.0.4)
+  - Quick (= 0.10.0)
+  - ReachabilitySwift (= 3)
+  - RealmSwift (= 2.0.3)
+  - RxBlocking (= 3.0.1)
+  - RxCocoa (= 3.0.1)
+  - RxSwift (= 3.0.1)
+  - STRegex (= 0.4.2)
+  - SwiftDate (= 4.0.7)
+  - SwiftyTimer (= 2.0.0)
+  - Swinject (= 2.0.0-beta.2)
+  - XCGLogger (= 4.0.0)
+
+EXTERNAL SOURCES:
+  HanekeSwift:
+    :branch: feature/swift-3
+    :git: https://github.com/Haneke/HanekeSwift
+
+CHECKOUT OPTIONS:
+  HanekeSwift:
+    :commit: 1157a124ec699f4ad926cb054f1d0bfce88ae7a9
+    :git: https://github.com/Haneke/HanekeSwift
+
+SPEC CHECKSUMS:
+  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
+  AlamofireImage: bb8c8351c51cb1633bb6be69b6dbbaff37ce65b7
+  AlamofireObjectMapper: 9faa3ce5a240efda1b209009a2d6e1e949227abc
+  HanekeSwift: 4113367892828e7700d24a384027de6ebc79aad1
+  KeychainSwift: b6947435dd78cc442c64a84ae648dd0e871cf448
+  Localize-Swift: d34c70b34ffb1468b2942c3f0b5c1dfd9119877e
+  Nimble: 56fc9f5020effa2206de22c3dd910f4fb011b92f
+  ObjectMapper: e5e0f8aef8590fc2ddcde7f27eddb255863ee6e9
+  OrderedSet: cd4723c057843c3cd269fca4d957c32db60ebcea
+  Quick: 5d290df1c69d5ee2f0729956dcf0fd9a30447eaa
+  ReachabilitySwift: f5b9bb30a0777fac8f09ce8b067e32faeb29bb64
+  Realm: 5f008bfe3c8c47142eddfc30b8c1584cde22db24
+  RealmSwift: 5afb451f65b682242f272dbb52d5c6f6e343c980
+  RxBlocking: 5de082d09d1ab45b49173f309f1a97d6b50f34c4
+  RxCocoa: 15a52fc590dcc700cb4a690a633b5c5184ce3a78
+  RxSwift: af5680055c4ad04480189c52d28385b1029493a6
+  STRegex: 9b6e0a4300c8442d1aa93241c895eeec4cc56935
+  SwiftDate: 0efb04a6751b1ab804049b2b09a69848cd304c12
+  SwiftyTimer: 2efd74b060d69ad4f1496baf5bbedbe132125fcf
+  Swinject: 69a893192efa9f2cc44be79ef423d04d571b6af9
+  XCGLogger: 38063ea89b4c8b23232d18efd2e12eb0005f3ea4
+
+PODFILE CHECKSUM: 9db3f6b90d7daad811ed06aad36f14de3648afd3
+
+COCOAPODS: 1.1.1
