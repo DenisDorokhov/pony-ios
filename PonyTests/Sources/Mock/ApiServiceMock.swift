@@ -81,7 +81,7 @@ class ApiServiceMock: ApiService {
             } else {
                 image = nil
             }
-            return self.buildObservable(image) {
+            return self.buildObservable(image, delay: 0.3) {
                 self.didCallDownloadImage = true
             }
         }
@@ -96,10 +96,10 @@ class ApiServiceMock: ApiService {
             } else {
                 return Observable.error(self.error)
             }
-        }.delay(0.1, scheduler: MainScheduler.instance)
+        }.delay(0.5, scheduler: MainScheduler.instance)
     }
     
-    private func buildObservable<T>(_ value: T?, action: @escaping () -> Void) -> Observable<T> {
+    private func buildObservable<T>(_ value: T?, delay: RxTimeInterval = 0.1, action: @escaping () -> Void) -> Observable<T> {
         return Observable.deferred {
             action()
             if let value = value {
@@ -107,7 +107,7 @@ class ApiServiceMock: ApiService {
             } else {
                 return Observable.error(self.error)
             }
-        }.delay(0.1, scheduler: MainScheduler.instance)
+        }.delay(delay, scheduler: MainScheduler.instance)
     }
 
 }
