@@ -29,7 +29,7 @@ class ApiServiceMock: ApiService {
     var didCallDownloadImage = false
     var didCallDownloadSong = false
 
-    var error = ApiError.unexpected
+    var error = PonyError.unexpected
 
     func getInstallation() -> Observable<Installation> {
         return buildObservable(installation) {

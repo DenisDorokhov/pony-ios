@@ -3,7 +3,6 @@
 // Copyright (c) 2016 Denis Dorokhov. All rights reserved.
 //
 
-import Foundation
 import Quick
 import Nimble
 import ReachabilitySwift
@@ -21,7 +20,6 @@ class ApiServiceSpec: QuickSpec {
     private let DEMO_PASSWORD = "demo"
 
     override func spec() {
-
         describe("ApiServiceImpl") {
 
             let isOffline = Reachability()?.currentReachabilityStatus == .notReachable
@@ -50,7 +48,7 @@ class ApiServiceSpec: QuickSpec {
                 service.restUrlDao = ApiUrlDaoMock(url: "http://notExistingDomain")
                 expect { 
                     try service.getInstallation().toTestBlocking().first() 
-                }.to(throwError(errorType: ApiError.self))
+                }.to(throwError(errorType: PonyError.self))
             }
 
             it("should get installation") {

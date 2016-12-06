@@ -15,8 +15,8 @@ class ApiServiceQueued: ApiService {
 
     private let targetService: ApiService
 
-    private let imageSubject = PublishSubject<Observable<UIImage>>()
-    private let songSubject = PublishSubject<Observable<Double>>()
+    private let imagePool = PublishSubject<Observable<UIImage>>()
+    private let songPool = PublishSubject<Observable<Double>>()
 
     private let disposeBag = DisposeBag()
 
@@ -24,8 +24,8 @@ class ApiServiceQueued: ApiService {
         self.targetService = targetService
         self.maxConcurrentImageRequests = maxConcurrentImageRequests
         self.maxConcurrentSongRequests = maxConcurrentSongRequests
-        imageSubject.merge(maxConcurrent: maxConcurrentImageRequests).subscribe().addDisposableTo(disposeBag)
-        songSubject.merge(maxConcurrent: maxConcurrentSongRequests).subscribe().addDisposableTo(disposeBag)
+        imagePool.merge(maxConcurrent: maxConcurrentImageRequests).subscribe().addDisposableTo(disposeBag)
+        songPool.merge(maxConcurrent: maxConcurrentSongRequests).subscribe().addDisposableTo(disposeBag)
     }
 
     func getInstallation() -> Observable<Installation> {
@@ -59,7 +59,7 @@ class ApiServiceQueued: ApiService {
     func downloadImage(atUrl url: String) -> Observable<UIImage> {
         return Observable.create { observer in
             let disposeSignal = PublishSubject<Bool>()
-            self.imageSubject.onNext(self.targetService.downloadImage(atUrl: url)
+            self.imagePool.onNext(self.targetService.downloadImage(atUrl: url)
                     .do(onNext: {
                         observer.onNext($0)
                     }, onError: {
@@ -80,7 +80,7 @@ class ApiServiceQueued: ApiService {
     func downloadSong(atUrl url: String, toFile file: String) -> Observable<Double> {
         return Observable.create { observer in
             let disposeSignal = PublishSubject<Bool>()
-            self.songSubject.onNext(self.targetService.downloadSong(atUrl: url, toFile: file)
+            self.songPool.onNext(self.targetService.downloadSong(atUrl: url, toFile: file)
                     .do(onNext: {
                         observer.onNext($0)
                     }, onError: {
