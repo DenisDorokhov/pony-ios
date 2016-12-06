@@ -16,7 +16,7 @@ fileprivate class ArtworkDownloadChannel {
                 disposable = queue.concat().subscribe()
             }
             if referenceCount <= 0 {
-                disposable?.dispose()
+                dispose()
             }
         }
     }
@@ -27,9 +27,14 @@ fileprivate class ArtworkDownloadChannel {
         self.artwork = artwork
         queue = PublishSubject()
     }
+    
+    deinit {
+        dispose()
+    }
 
-    func dispose() {
+    private func dispose() {
         disposable?.dispose()
+        disposable = nil
     }
 }
 
@@ -51,12 +56,6 @@ class ArtworkService {
     init(delegate: ArtworkServiceDelegate, apiService: ApiService) {
         self.delegate = delegate
         self.apiService = apiService
-    }
-
-    deinit {
-        for (_, channel) in artworkToChannel {
-            channel.dispose()
-        }
     }
 
     func useOrDownload(artwork: Int64, url: String) -> Observable<Int> {
@@ -124,6 +123,7 @@ class ArtworkService {
         if let channel = artworkToChannel[artwork] {
             if channel.referenceCount <= 1 {
                 Log.verbose("Removing channel for artwork '\(artwork)'.")
+                channel.referenceCount = 0
                 artworkToChannel.removeValue(forKey: artwork)
             } else {
                 let newReferenceCount = channel.referenceCount - 1
