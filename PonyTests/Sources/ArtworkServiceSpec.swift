@@ -75,8 +75,9 @@ class ArtworkServiceSpec: QuickSpec {
             
             it("should separate artwork downloads") {
                 _ = service.useOrDownload(artwork: 123, url: "someUrl1").subscribe()
+                _ = service.useOrDownload(artwork: 456, url: "someUrl2").subscribe()
                 let usageCount = try! service.useOrDownload(artwork: 456, url: "someUrl2").toBlocking().first()!
-                expect(usageCount).to(equal(1))
+                expect(usageCount).to(equal(2))
             }
             
             it("should cancel artwork download") {
