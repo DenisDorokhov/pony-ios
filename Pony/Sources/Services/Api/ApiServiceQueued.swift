@@ -58,6 +58,7 @@ class ApiServiceQueued: ApiService {
 
     func downloadImage(atUrl url: String) -> Observable<UIImage> {
         return Observable.create { observer in
+            let disposeSignal = PublishSubject<Bool>()
             self.imageSubject.onNext(self.targetService.downloadImage(atUrl: url)
                     .do(onNext: {
                         observer.onNext($0)
@@ -68,13 +69,17 @@ class ApiServiceQueued: ApiService {
                         observer.onCompleted()
                     }, onSubscribe: {
                         self.runningImageRequests.value += 1
-                    }))
-            return Disposables.create()
+                    }).takeUntil(disposeSignal))
+            return Disposables.create {
+                disposeSignal.onNext(true)
+                disposeSignal.onCompleted()
+            }
         }
     }
 
     func downloadSong(atUrl url: String, toFile file: String) -> Observable<Double> {
         return Observable.create { observer in
+            let disposeSignal = PublishSubject<Bool>()
             self.songSubject.onNext(self.targetService.downloadSong(atUrl: url, toFile: file)
                     .do(onNext: {
                         observer.onNext($0)
@@ -85,8 +90,11 @@ class ApiServiceQueued: ApiService {
                         observer.onCompleted()
                     }, onSubscribe: {
                         self.runningSongRequests.value += 1
-                    }))
-            return Disposables.create()
+                    }).takeUntil(disposeSignal))
+            return Disposables.create {
+                disposeSignal.onNext(true)
+                disposeSignal.onCompleted()
+            }
         }
     }
 }
