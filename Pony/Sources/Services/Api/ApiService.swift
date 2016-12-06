@@ -255,8 +255,10 @@ class ApiServiceImpl: ApiService {
 
     private func buildDisposable(_ request: Request) -> Disposable {
         return Disposables.create {
-            Log.debug("Request cancelled: \(request.debugDescription)")
-            request.cancel()
+            if request.task?.state != .completed {
+                Log.debug("Canceling request: \(request.debugDescription)")
+                request.cancel()
+            }
         }
     }
 
