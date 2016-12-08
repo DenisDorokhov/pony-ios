@@ -9,7 +9,7 @@ protocol CacheProvider: class {
 
     associatedtype ItemType
 
-    func get(forKey: String) -> Observable<ItemType>
+    func get(forKey: String) -> Observable<ItemType?>
     func set(object: ItemType, forKey: String) -> Observable<ItemType>
 
     func remove(forKey: String) -> Observable<Void>
@@ -18,27 +18,26 @@ protocol CacheProvider: class {
 
 class Cache<T>: CacheProvider {
 
-    private let doGet: (String) -> Observable<T>
+    private let doGet: (String) -> Observable<T?>
     private let doSet: (T, String) -> Observable<T>
     private let doRemove: (String) -> Observable<Void>
     private let doRemoveAll: () -> Observable<Void>
 
-    init<P: CacheProvider>(provider: P) where P.ItemType == T {
+    init<P:CacheProvider>(provider: P) where P.ItemType == T {
         doGet = provider.get
         doSet = provider.set
         doRemove = provider.remove
         doRemoveAll = provider.removeAll
     }
 
-    func get(forKey key: String) -> Observable<T> {
-        let hitObservable = doGet(key).do(onNext: { value in
-            Log.verbose("Cache HIT for key '\(key)'.")
+    func get(forKey key: String) -> Observable<T?> {
+        return doGet(key).do(onNext: {
+            if $0 != nil {
+                Log.verbose("Cache HIT for key '\(key)'.")
+            } else {
+                Log.verbose("Cache MISS for key '\(key)'.")
+            }
         })
-        let missObservable = Observable.deferred { () -> Observable<T> in
-            Log.verbose("Cache MISS for key '\(key)'.")
-            return Observable.empty()
-        }
-        return Observable.of(hitObservable, missObservable).concat().take(1)
     }
 
     func set(object: T, forKey key: String) -> Observable<T> {

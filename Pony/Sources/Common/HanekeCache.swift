@@ -6,7 +6,7 @@
 import RxSwift
 import Haneke
 
-class HanekeCache<T:DataConvertible>: CacheProvider where T.Result == T, T:DataRepresentable {
+class HanekeCache<T:DataConvertible>: CacheProvider where T.Result == T, T: DataRepresentable {
 
     let cache: Haneke.Cache<T>
     let formatName: String
@@ -16,10 +16,11 @@ class HanekeCache<T:DataConvertible>: CacheProvider where T.Result == T, T:DataR
         self.formatName = formatName
     }
 
-    func get(forKey key: String) -> Observable<T> {
+    func get(forKey key: String) -> Observable<T?> {
         return Observable.create { observer in
             self.cache.fetch(key: key, formatName: self.formatName, failure: {
                 error in
+                observer.onNext(nil)
                 observer.onCompleted()
             }, success: {
                 observer.onNext($0)

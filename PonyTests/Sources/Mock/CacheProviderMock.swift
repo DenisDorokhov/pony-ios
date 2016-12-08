@@ -11,13 +11,9 @@ class CacheProviderMock<T>: CacheProvider {
 
     var map: [String: T] = [:]
 
-    func get(forKey key: String) -> Observable<T> {
+    func get(forKey key: String) -> Observable<T?> {
         return Observable.deferred {
-            if let object = self.map[key] {
-                return Observable.just(object)
-            } else {
-                return Observable.empty()
-            }
+            return Observable.just(self.map[key])
         }
     }
 

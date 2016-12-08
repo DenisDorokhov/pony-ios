@@ -45,12 +45,17 @@ class ApiServiceCached: ApiService {
 
     func downloadImage(atUrl url: String) -> Observable<UIImage> {
         return Observable.deferred {
-            let cacheObservable = self.imageCache.get(forKey: url)
-            let apiObservable = self.targetService.downloadImage(atUrl: url)
-                .flatMap {
-                    self.imageCache.set(object: $0, forKey: url)
+            let downloadImageAndCache = self.targetService.downloadImage(atUrl: url)
+                    .flatMap {
+                        self.imageCache.set(object: $0, forKey: url)
+                    }
+            return self.imageCache.get(forKey: url).flatMap { (image) -> Observable<UIImage> in
+                if let image = image {
+                    return Observable.of(image)
+                } else {
+                    return downloadImageAndCache
                 }
-            return Observable.of(cacheObservable, apiObservable).concat().take(1)
+            }
         }
     }
 
