@@ -14,7 +14,6 @@ target 'Pony' do
   pod 'OrderedSet', '2.0.4'
   pod 'ReachabilitySwift', '3'
   pod 'RealmSwift', '2.0.3'
-  pod 'RxBlocking', '3.0.1'
   pod 'RxCocoa', '3.0.1'
   pod 'RxSwift', '3.0.1'
   pod 'STRegex', '0.4.2'
@@ -23,10 +22,11 @@ target 'Pony' do
   pod 'XCGLogger', '4.0.0'
 
   target 'PonyTests' do
-    
+
     inherit! :search_paths
-    
-    pod 'Quick', '0.10.0'
+
     pod 'Nimble', '5.0.0'
+    pod 'Quick', '0.10.0'
+    pod 'RxBlocking', '3.0.1'
   end
 end

@@ -60,7 +60,7 @@ class ArtworkService {
 
     func useOrDownload(artwork: Int64, url: String) -> Observable<Int> {
         return Observable.create { observer in
-            let disposeSignal = PublishSubject<Bool>()
+            let disposeSignal = PublishSubject<Void>()
             self.retainChannel(forArtwork: artwork).onNext(
                             self.fetchUsageCount(forArtwork: artwork).flatMap {
                                 self.useOrDownload(artwork: artwork, url: url, usageCount: $0)
@@ -75,7 +75,7 @@ class ArtworkService {
                                 Log.debug("Use / download cancelled for artwork '\(artwork)'.")
                             }))
             return Disposables.create {
-                disposeSignal.onNext(true)
+                disposeSignal.onNext()
                 disposeSignal.onCompleted()
             }
         }
@@ -83,7 +83,7 @@ class ArtworkService {
 
     func releaseOrRemove(artwork: Int64) -> Observable<Int> {
         return Observable.create { observer in
-            let disposeSignal = PublishSubject<Bool>()
+            let disposeSignal = PublishSubject<Void>()
             self.retainChannel(forArtwork: artwork).onNext(
                             self.fetchUsageCount(forArtwork: artwork).flatMap {
                                 self.releaseOrRemove(artwork: artwork, usageCount: $0)
@@ -98,7 +98,7 @@ class ArtworkService {
                                 Log.debug("Release / removal cancelled for artwork '\(artwork)'.")
                             }))
             return Disposables.create {
-                disposeSignal.onNext(true)
+                disposeSignal.onNext()
                 disposeSignal.onCompleted()
             }
         }

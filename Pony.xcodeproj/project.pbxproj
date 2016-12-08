@@ -775,6 +775,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A4D845E27C8DACCAB30431C0 /* Pods-Pony.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Pony/Resources/Pony.entitlements;
 				DEVELOPMENT_TEAM = 8ADG4GL855;
@@ -790,6 +791,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0C63DEA994813D3BFE13C3C9 /* Pods-Pony.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Pony/Resources/Pony.entitlements;
 				DEVELOPMENT_TEAM = 8ADG4GL855;
@@ -805,6 +807,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 32217CC6C4FE381CF32CA210 /* Pods-PonyTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = PonyTests/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -819,6 +822,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BDD888DDB0F0510EC3BEF169 /* Pods-PonyTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = PonyTests/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
