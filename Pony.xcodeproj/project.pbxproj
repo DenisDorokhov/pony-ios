@@ -39,7 +39,9 @@
 		B3D3902E7893D46D205ACE20 /* ApiUrlDaoSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D3993F2CA6FF180C29CBAF /* ApiUrlDaoSpec.swift */; };
 		B3D39065FE2FD5E479605B9D /* GenreRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D399253660454872AC4BC4 /* GenreRealm.swift */; };
 		B3D3910774CFF53FE557C892 /* RealmContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D390847FA0DCD25F55669E /* RealmContext.swift */; };
+		B3D391E6D70BBEA00EE53E82 /* song-17_4_3.json in Resources */ = {isa = PBXBuildFile; fileRef = B3D393EACD0B5558F15C9B12 /* song-17_4_3.json */; };
 		B3D39211EF4DADC24777B152 /* EventBusSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D39A90BE56AA79A6D785AF /* EventBusSpec.swift */; };
+		B3D3933CFEB84D600DA83CC9 /* SongServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D39EBA0189DD1EF78FC181 /* SongServiceSpec.swift */; };
 		B3D394C74A110E597F03D165 /* ApiUrlDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D39145FF6B4A31BF3EE82B /* ApiUrlDao.swift */; };
 		B3D3959B705A95E8559C2978 /* FileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D398976486D29F6E1E82E0 /* FileUtils.swift */; };
 		B3D3961CE0B695418ECC9760 /* TokenPairDaoMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D393A2E2DCE8BE452B5E53 /* TokenPairDaoMock.swift */; };
@@ -47,18 +49,21 @@
 		B3D3975309473B55FFA414F4 /* ApiUrlDaoMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D3937A4CF9CE5A1E945DA3 /* ApiUrlDaoMock.swift */; };
 		B3D39764B77258DF2E8C6E93 /* LogConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D393A7566040C428B0CB27 /* LogConfigurator.swift */; };
 		B3D3980555A93020A545A33A /* artwork.png in Resources */ = {isa = PBXBuildFile; fileRef = B3D39FBC1ED8E72B310F0BF8 /* artwork.png */; };
+		B3D3980EF57C6C536C6F413D /* StorageUrlProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D3945E2CC80097478F7051 /* StorageUrlProvider.swift */; };
 		B3D398764FB53DFF53F6149D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D3968FF0D48F88A66406EC /* AppDelegate.swift */; };
 		B3D399282BC76FCFBFBC5810 /* TokenPairDaoSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D396E7055EC3642CA17602 /* TokenPairDaoSpec.swift */; };
 		B3D399AA2089146E5A63BEB8 /* TokenPairDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D39ED1BF8970E0326018AE /* TokenPairDao.swift */; };
 		B3D399DFE75F5AF75DC25747 /* ApiServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D39D4016F53EC42436D753 /* ApiServiceSpec.swift */; };
 		B3D39AB5ABA72D46636F028F /* XCGLogDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D39BFF235F286FB8F8B306 /* XCGLogDelegate.swift */; };
 		B3D39AD064012E68FF73F8A7 /* ApiSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D3914EDD635422F22972A1 /* ApiSessionManager.swift */; };
+		B3D39BBE162CFD1A454EF21B /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D399012AA3CB4213CCFED2 /* SongService.swift */; };
 		B3D39BD30AC09B6435367A73 /* ArtistRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D393B10F170EC428A7F08B /* ArtistRealm.swift */; };
 		B3D39C197A72D70A2CC50BC4 /* Int64Transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D39266AB7B7DF8B82446D4 /* Int64Transform.swift */; };
 		B3D39C78EB1D4CAF6C4C1E4D /* AlbumRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D39777F76DF07A5F4A3194 /* AlbumRealm.swift */; };
 		B3D39D1684378F2E9A2AD74D /* EventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D392BE2BB3DCC0B9AB2A50 /* EventBus.swift */; };
 		B3D39D45FE77D0F26AA72508 /* AbstractRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D3921D7E6C2366A1443C5F /* AbstractRealm.swift */; };
-		B3D39D5A9D1C39DD3E571E32 /* song.json in Resources */ = {isa = PBXBuildFile; fileRef = B3D392E2EDD048A00C8701BD /* song.json */; };
+		B3D39D5A9D1C39DD3E571E32 /* song-18_4_3.json in Resources */ = {isa = PBXBuildFile; fileRef = B3D392E2EDD048A00C8701BD /* song-18_4_3.json */; };
+		B3D39E2913D9BFB5C1EB49FB /* song-15_3_3.json in Resources */ = {isa = PBXBuildFile; fileRef = B3D39DD149B4B0012CCC338D /* song-15_3_3.json */; };
 		B3D39EE7048D50099D8918E5 /* RandomUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D392642E763EE7E6F40590 /* RandomUtils.swift */; };
 		B3D39EED0B82C8F41D70BD23 /* SongRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D397D8A1AC34CF1200F072 /* SongRealm.swift */; };
 		B3D39EFCE854BB74C9809E24 /* song.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B3D3983968CF3E77D6F3B7CB /* song.mp3 */; };
@@ -118,13 +123,15 @@
 		B3D39266AB7B7DF8B82446D4 /* Int64Transform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Int64Transform.swift; sourceTree = "<group>"; };
 		B3D3927D712D57647B8F38A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		B3D392BE2BB3DCC0B9AB2A50 /* EventBus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventBus.swift; sourceTree = "<group>"; };
-		B3D392E2EDD048A00C8701BD /* song.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = song.json; sourceTree = "<group>"; };
+		B3D392E2EDD048A00C8701BD /* song-18_4_3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "song-18_4_3.json"; sourceTree = "<group>"; };
 		B3D3937A4CF9CE5A1E945DA3 /* ApiUrlDaoMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiUrlDaoMock.swift; sourceTree = "<group>"; };
 		B3D393A2E2DCE8BE452B5E53 /* TokenPairDaoMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenPairDaoMock.swift; sourceTree = "<group>"; };
 		B3D393A7566040C428B0CB27 /* LogConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogConfigurator.swift; sourceTree = "<group>"; };
 		B3D393B10F170EC428A7F08B /* ArtistRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistRealm.swift; sourceTree = "<group>"; };
 		B3D393C507410E6843E87EC5 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		B3D393DCBB3DA528E358AB8C /* Pony.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Pony.entitlements; sourceTree = "<group>"; };
+		B3D393EACD0B5558F15C9B12 /* song-17_4_3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "song-17_4_3.json"; sourceTree = "<group>"; };
+		B3D3945E2CC80097478F7051 /* StorageUrlProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageUrlProvider.swift; sourceTree = "<group>"; };
 		B3D3968FF0D48F88A66406EC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B3D396E7055EC3642CA17602 /* TokenPairDaoSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenPairDaoSpec.swift; sourceTree = "<group>"; };
 		B3D396F8A329884CC74069ED /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
@@ -132,6 +139,7 @@
 		B3D397D8A1AC34CF1200F072 /* SongRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongRealm.swift; sourceTree = "<group>"; };
 		B3D3983968CF3E77D6F3B7CB /* song.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song.mp3; sourceTree = "<group>"; };
 		B3D398976486D29F6E1E82E0 /* FileUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUtils.swift; sourceTree = "<group>"; };
+		B3D399012AA3CB4213CCFED2 /* SongService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongService.swift; sourceTree = "<group>"; };
 		B3D399253660454872AC4BC4 /* GenreRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenreRealm.swift; sourceTree = "<group>"; };
 		B3D3992DD2596E60952D313A /* TestUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestUtils.swift; sourceTree = "<group>"; };
 		B3D3993F2CA6FF180C29CBAF /* ApiUrlDaoSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiUrlDaoSpec.swift; sourceTree = "<group>"; };
@@ -139,6 +147,8 @@
 		B3D39BFF235F286FB8F8B306 /* XCGLogDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCGLogDelegate.swift; sourceTree = "<group>"; };
 		B3D39C80A6989FF7A68126A2 /* ApiService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiService.swift; sourceTree = "<group>"; };
 		B3D39D4016F53EC42436D753 /* ApiServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiServiceSpec.swift; sourceTree = "<group>"; };
+		B3D39DD149B4B0012CCC338D /* song-15_3_3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "song-15_3_3.json"; sourceTree = "<group>"; };
+		B3D39EBA0189DD1EF78FC181 /* SongServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongServiceSpec.swift; sourceTree = "<group>"; };
 		B3D39ED1BF8970E0326018AE /* TokenPairDao.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenPairDao.swift; sourceTree = "<group>"; };
 		B3D39FBC1ED8E72B310F0BF8 /* artwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = artwork.png; sourceTree = "<group>"; };
 		BDD888DDB0F0510EC3BEF169 /* Pods-PonyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PonyTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PonyTests/Pods-PonyTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -240,6 +250,8 @@
 				B3D393A7566040C428B0CB27 /* LogConfigurator.swift */,
 				B3D390847FA0DCD25F55669E /* RealmContext.swift */,
 				375B7D31C9BCC9BE35F2765A /* ArtworkService.swift */,
+				B3D399012AA3CB4213CCFED2 /* SongService.swift */,
+				B3D3945E2CC80097478F7051 /* StorageUrlProvider.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -339,8 +351,10 @@
 			isa = PBXGroup;
 			children = (
 				B3D3983968CF3E77D6F3B7CB /* song.mp3 */,
-				B3D392E2EDD048A00C8701BD /* song.json */,
+				B3D392E2EDD048A00C8701BD /* song-18_4_3.json */,
 				B3D39FBC1ED8E72B310F0BF8 /* artwork.png */,
+				B3D39DD149B4B0012CCC338D /* song-15_3_3.json */,
+				B3D393EACD0B5558F15C9B12 /* song-17_4_3.json */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -384,6 +398,7 @@
 				375B770FECE9AF15BA7F56B9 /* ApiServiceCachedSpec.swift */,
 				375B74251FA34680BD6883BF /* ApiServiceQueuedSpec.swift */,
 				375B70B53E8E5DD27303F915 /* ArtworkServiceSpec.swift */,
+				B3D39EBA0189DD1EF78FC181 /* SongServiceSpec.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -503,8 +518,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B3D39EFCE854BB74C9809E24 /* song.mp3 in Resources */,
-				B3D39D5A9D1C39DD3E571E32 /* song.json in Resources */,
+				B3D39D5A9D1C39DD3E571E32 /* song-18_4_3.json in Resources */,
 				B3D3980555A93020A545A33A /* artwork.png in Resources */,
+				B3D39E2913D9BFB5C1EB49FB /* song-15_3_3.json in Resources */,
+				B3D391E6D70BBEA00EE53E82 /* song-17_4_3.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -643,6 +660,8 @@
 				375B787F8216ED08C74BAE7F /* User.swift in Sources */,
 				375B70A80E4F3C1AC0B6E0EF /* ArtworkService.swift in Sources */,
 				375B7CCA2A577D9AC8DC8921 /* PonyError.swift in Sources */,
+				B3D39BBE162CFD1A454EF21B /* SongService.swift in Sources */,
+				B3D3980EF57C6C536C6F413D /* StorageUrlProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -664,6 +683,7 @@
 				375B74FF0B214EB33D84C247 /* ApiServiceCachedSpec.swift in Sources */,
 				375B74DC16AE755F17F8EE4E /* ApiServiceMock.swift in Sources */,
 				375B707BC1963574A30A7D60 /* ApiServiceQueuedSpec.swift in Sources */,
+				B3D3933CFEB84D600DA83CC9 /* SongServiceSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

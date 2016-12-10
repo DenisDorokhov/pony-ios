@@ -1,0 +1,30 @@
+{
+  "id":15,
+  "updateDate":null,
+  "url":"http://pony.dorokhov.net/demo/audio/15",
+  "size":4474963,
+  "duration":158,
+  "discNumber":null,
+  "trackNumber":1,
+  "artistName":"Brigitte Bop",
+  "name":"Le carton",
+  "album":{
+    "id":3,
+    "name":"Nos Futurs",
+    "year":2010,
+    "artwork":3,
+    "artworkUrl":"http://pony.dorokhov.net/demo/files/3",
+    "artist":{
+      "id":3,
+      "name":"Brigitte Bop",
+      "artwork":3,
+      "artworkUrl":"http://pony.dorokhov.net/demo/files/3"
+    }
+  },
+  "genre":{
+    "id":1,
+    "name":"(255)",
+    "artwork":37,
+    "artworkUrl":"http://pony.dorokhov.net/demo/files/37"
+  }
+}

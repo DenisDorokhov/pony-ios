@@ -10,6 +10,7 @@ enum PonyError: Error, CustomStringConvertible {
     case offline
     case timeout
     case cancelled
+    case notFound
     case unexpected
     case response(errors: [ResponseError])
 
@@ -35,15 +36,17 @@ enum PonyError: Error, CustomStringConvertible {
         get {
             switch self {
             case .offline:
-                return "ApiError.offline"
+                return "PonyError.offline"
             case .timeout:
-                return "ApiError.timeout"
+                return "PonyError.timeout"
             case .cancelled:
-                return "ApiError.cancelled"
+                return "PonyError.cancelled"
+            case .notFound:
+                return "PonyError.notFound"
             case .unexpected:
-                return "ApiError.unexpected"
+                return "PonyError.unexpected"
             case .response(let errors):
-                return "ApiError.response{errors=\(errors)}"
+                return "PonyError.response{errors=\(errors)}"
             }
         }
     }

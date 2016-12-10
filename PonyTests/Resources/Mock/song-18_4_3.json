@@ -1,0 +1,30 @@
+{
+  "id":18,
+  "updateDate":null,
+  "url":"http://pony.dorokhov.net/demo/audio/18",
+  "size":4708239,
+  "duration":163,
+  "discNumber":null,
+  "trackNumber":1,
+  "artistName":"Brigitte Bop",
+  "name":"toujours plus fort",
+  "album":{
+    "id":4,
+    "name":"Highway to punk",
+    "year":2007,
+    "artwork":4,
+    "artworkUrl":"http://pony.dorokhov.net/demo/files/4",
+    "artist":{
+      "id":3,
+      "name":"Brigitte Bop",
+      "artwork":3,
+      "artworkUrl":"http://pony.dorokhov.net/demo/files/3"
+    }
+  },
+  "genre":{
+    "id":1,
+    "name":"(255)",
+    "artwork":37,
+    "artworkUrl":"http://pony.dorokhov.net/demo/files/37"
+  }
+}

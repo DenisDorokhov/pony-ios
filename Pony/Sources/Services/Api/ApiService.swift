@@ -51,11 +51,14 @@ class ApiServiceImpl: ApiService {
     private let HEADER_ACCESS_TOKEN = "X-Pony-Access-Token"
     private let HEADER_REFRESH_TOKEN = "X-Pony-Refresh-Token"
 
-    var sessionManager: SessionManager!
-    var tokenPairDao: TokenPairDao!
-    var restUrlDao: ApiUrlDao!
+    let sessionManager: SessionManager
+    let tokenPairDao: TokenPairDao
+    let apiUrlDao: ApiUrlDao
 
-    init() {
+    init(sessionManager: SessionManager, tokenPairDao: TokenPairDao, apiUrlDao: ApiUrlDao) {
+        self.sessionManager = sessionManager
+        self.tokenPairDao = tokenPairDao
+        self.apiUrlDao = apiUrlDao
         DataRequest.addAcceptableImageContentTypes(["image/jpg"])
     }
 
@@ -183,7 +186,7 @@ class ApiServiceImpl: ApiService {
     }
 
     private func buildUrl(_ path: String) -> URL {
-        return restUrlDao.fetchUrl()!.appendingPathComponent(path)
+        return apiUrlDao.fetchUrl()!.appendingPathComponent(path)
     }
 
     private func buildAuthorizationHeaders() -> [String: String] {

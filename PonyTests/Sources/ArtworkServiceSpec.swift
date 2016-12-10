@@ -16,6 +16,7 @@ class ArtworkServiceSpec: QuickSpec {
 
             var apiServiceMock: ApiServiceMock!
             var delegate: ArtworkServiceDelegateMock!
+            var storageUrlProvider: StorageUrlProvider!
             var service: ArtworkService!
             beforeEach {
                 TestUtils.cleanAll()
@@ -28,8 +29,10 @@ class ArtworkServiceSpec: QuickSpec {
                 delegate = ArtworkServiceDelegateMock()
                 delegate.artworkToUsageCount[123] = 0
                 delegate.artworkToUsageCount[456] = 0
+                
+                storageUrlProvider = StorageUrlProvider()
 
-                service = ArtworkService(delegate: delegate, apiService: apiServiceMock)
+                service = ArtworkService(delegate: delegate, apiService: apiServiceMock, storageUrlProvider: storageUrlProvider)
             }
             afterEach {
                 TestUtils.cleanAll()
@@ -39,7 +42,7 @@ class ArtworkServiceSpec: QuickSpec {
                 let usageCount = try! service.useOrDownload(artwork: 123, url: "someUrl").toBlocking().first()!
                 expect(usageCount).to(equal(1))
                 expect(apiServiceMock.didCallDownloadImage).to(beTrue())
-                expect(FileManager.default.fileExists(atPath: delegate.getFilePath(forArtwork: 123))).to(beTrue())
+                expect(FileManager.default.fileExists(atPath: storageUrlProvider.fileUrl(forArtwork: 123).path)).to(beTrue())
             }
 
             it("should remove artwork") {
@@ -47,7 +50,7 @@ class ArtworkServiceSpec: QuickSpec {
                             service.releaseOrRemove(artwork: 123)
                         }.toBlocking().first()!
                 expect(usageCount).to(equal(0))
-                expect(FileManager.default.fileExists(atPath: delegate.getFilePath(forArtwork: 123))).to(beFalse())
+                expect(FileManager.default.fileExists(atPath: storageUrlProvider.fileUrl(forArtwork: 123).path)).to(beFalse())
             }
 
             it("should increase usage count without calling api") {

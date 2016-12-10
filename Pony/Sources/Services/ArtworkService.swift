@@ -40,27 +40,28 @@ fileprivate class ArtworkDownloadChannel {
 
 protocol ArtworkServiceDelegate: class {
     func getUsageCount(forArtwork: Int64) -> Observable<Int>
-    func getFilePath(forArtwork: Int64) -> String
 }
 
 class ArtworkService {
 
     let delegate: ArtworkServiceDelegate
     let apiService: ApiService
+    let storageUrlProvider: StorageUrlProvider
 
     private var artworkToUsageCount: [Int64: Int] = [:]
     private var artworkToChannel: [Int64: ArtworkDownloadChannel] = [:]
 
     private var fileOperationScheduler = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .default))
 
-    init(delegate: ArtworkServiceDelegate, apiService: ApiService) {
+    init(delegate: ArtworkServiceDelegate, apiService: ApiService, storageUrlProvider: StorageUrlProvider) {
         self.delegate = delegate
         self.apiService = apiService
+        self.storageUrlProvider = storageUrlProvider
     }
 
     func useOrDownload(artwork: Int64, url: String) -> Observable<Int> {
         return Observable.create { observer in
-            let disposeSignal = PublishSubject<Void>()
+            let disposeSignal = ReplaySubject<Void>.createUnbounded()
             self.retainChannel(forArtwork: artwork).onNext(
                             self.fetchUsageCount(forArtwork: artwork).flatMap {
                                 self.useOrDownload(artwork: artwork, url: url, usageCount: $0)
@@ -83,7 +84,7 @@ class ArtworkService {
 
     func releaseOrRemove(artwork: Int64) -> Observable<Int> {
         return Observable.create { observer in
-            let disposeSignal = PublishSubject<Void>()
+            let disposeSignal = ReplaySubject<Void>.createUnbounded()
             self.retainChannel(forArtwork: artwork).onNext(
                             self.fetchUsageCount(forArtwork: artwork).flatMap {
                                 self.releaseOrRemove(artwork: artwork, usageCount: $0)
@@ -166,21 +167,22 @@ class ArtworkService {
         if newUsageCount == 1 {
             Log.debug("Downloading artwork '\(artwork)...'.")
             return apiService.downloadImage(atUrl: url)
-                    .map { image -> (UIImage, String) in
+                    .map { image -> (UIImage, URL) in
                         Log.info("Artwork '\(artwork)' has been downloaded.")
-                        return (image, self.delegate.getFilePath(forArtwork: artwork))
+                        return (image, self.storageUrlProvider.fileUrl(forArtwork: artwork))
                     }.observeOn(fileOperationScheduler).map {
-                        let (image, filePath) = $0
+                        let (image, fileUrl) = $0
                         guard let imageData = UIImagePNGRepresentation(image) else {
                             Log.error("Artwork '\(artwork)' could not be encoded into PNG.")
                             throw PonyError.unexpected
                         }
                         do {
-                            try imageData.write(to: URL(fileURLWithPath: filePath), options: .atomic)
-                            Log.info("Artwork '\(artwork)' has been stored to '\(filePath)'.")
+                            try FileUtils.createDirectory(atPath: (fileUrl.path as NSString).deletingLastPathComponent)
+                            try imageData.write(to: fileUrl, options: .atomic)
+                            Log.info("Artwork '\(artwork)' has been stored to '\(fileUrl)'.")
                         } catch let error {
                             Log.error("Artwork '\(artwork)' could not be written to file: \(error).")
-                            throw PonyError.unexpected
+                            throw error
                         }
                         return newUsageCount
                     }.observeOn(MainScheduler.instance)
@@ -194,12 +196,12 @@ class ArtworkService {
         assert(newUsageCount >= 0)
         Log.debug("Decremented usage count of '\(artwork)': \(newUsageCount).")
         if newUsageCount <= 0 {
-            return Observable.just(self.delegate.getFilePath(forArtwork: artwork))
-                    .observeOn(fileOperationScheduler).map { filePath in
+            return Observable.just(self.storageUrlProvider.fileUrl(forArtwork: artwork))
+                    .observeOn(fileOperationScheduler).map { fileUrl in
                         Log.info("Deleting artwork '\(artwork)'...")
                         do {
-                            try FileManager.default.removeItem(atPath: filePath)
-                            Log.info("Artwork '\(artwork)' has been deleted from '\(filePath)'.")
+                            try FileManager.default.removeItem(atPath: fileUrl.path)
+                            Log.info("Artwork '\(artwork)' has been deleted from '\(fileUrl)'.")
                         } catch let error {
                             Log.warn("Could not delete artwork '\(artwork)' file: \(error).")
                         }

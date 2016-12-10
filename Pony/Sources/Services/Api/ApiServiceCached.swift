@@ -7,8 +7,8 @@ import RxSwift
 
 class ApiServiceCached: ApiService {
 
-    private let targetService: ApiService
-    private let imageCache: Cache<UIImage>
+    let targetService: ApiService
+    let imageCache: Cache<UIImage>
 
     init(targetService: ApiService, imageCache: Cache<UIImage>) {
         self.targetService = targetService

@@ -27,10 +27,9 @@ class ApiServiceSpec: QuickSpec {
             var service: ApiServiceImpl!
             beforeEach {
                 TestUtils.cleanAll()
-                service = ApiServiceImpl()
-                service.sessionManager = ApiSessionManager(debug: true)
-                service.tokenPairDao = TokenPairDaoMock()
-                service.restUrlDao = ApiUrlDaoMock(url: isOffline ? self.OFFLINE_DEMO_URL : self.ONLINE_DEMO_URL)
+                service = ApiServiceImpl(sessionManager: ApiSessionManager(debug: true),
+                        tokenPairDao: TokenPairDaoMock(),
+                        apiUrlDao: ApiUrlDaoMock(url: isOffline ? self.OFFLINE_DEMO_URL : self.ONLINE_DEMO_URL))
             }
             afterEach {
                 TestUtils.cleanAll()
@@ -45,7 +44,7 @@ class ApiServiceSpec: QuickSpec {
             }
 
             it("should handle errors") {
-                service.restUrlDao = ApiUrlDaoMock(url: "http://notExistingDomain")
+                (service.apiUrlDao as! ApiUrlDaoMock).url = URL(string: "http://notExistingDomain")
                 expect { 
                     try service.getInstallation().toTestBlocking().first() 
                 }.to(throwError(errorType: PonyError.self))

@@ -7,13 +7,13 @@ import RxSwift
 
 class ApiServiceQueued: ApiService {
     
+    let targetService: ApiService
+    
     let maxConcurrentImageRequests: Int
     let maxConcurrentSongRequests: Int
 
     private(set) var runningImageRequests = Variable(0)
     private(set) var runningSongRequests = Variable(0)
-
-    private let targetService: ApiService
 
     private let imagePool = PublishSubject<Observable<UIImage>>()
     private let songPool = PublishSubject<Observable<Double>>()
@@ -58,7 +58,7 @@ class ApiServiceQueued: ApiService {
 
     func downloadImage(atUrl url: String) -> Observable<UIImage> {
         return Observable.create { observer in
-            let disposeSignal = PublishSubject<Void>()
+            let disposeSignal = ReplaySubject<Void>.createUnbounded()
             self.imagePool.onNext(self.targetService.downloadImage(atUrl: url)
                     .do(onNext: {
                         observer.onNext($0)
@@ -79,7 +79,7 @@ class ApiServiceQueued: ApiService {
 
     func downloadSong(atUrl url: String, toFile file: String) -> Observable<Double> {
         return Observable.create { observer in
-            let disposeSignal = PublishSubject<Void>()
+            let disposeSignal = ReplaySubject<Void>.createUnbounded()
             self.songPool.onNext(self.targetService.downloadSong(atUrl: url, toFile: file)
                     .do(onNext: {
                         observer.onNext($0)

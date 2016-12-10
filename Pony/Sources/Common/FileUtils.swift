@@ -45,6 +45,7 @@ class FileUtils {
         return (cachePath as NSString).appendingPathComponent(path)
     }
 
+    @discardableResult
     static func createDirectory(atPath: String) throws -> String {
         if !FileManager.default.fileExists(atPath: atPath) {
             try FileManager.default.createDirectory(atPath: atPath, withIntermediateDirectories: true, attributes: nil)

@@ -3,24 +3,28 @@
 // Copyright (c) 2016 Denis Dorokhov. All rights reserved.
 //
 
-import Foundation
 import RealmSwift
+import RxSwift
 
-protocol RealmContext: class {
+class RealmContext {
 
-    var queue: DispatchQueue { get }
-
-    func createRealm() throws -> Realm
-}
-
-class RealmContextImpl: RealmContext {
-
-    var realmFileName: String = "library.realm"
-
-    lazy var queue: DispatchQueue = DispatchQueue(label: "LibraryService.realmQueue")
+    let fileName: String
+    
+    let queue: DispatchQueue
+    let scheduler: SchedulerType
+    
+    convenience init() {
+        self.init(fileName: "Pony.realm")
+    }
+    
+    init(fileName: String) {
+        self.fileName = fileName
+        self.queue = DispatchQueue(label: "Pony.realmQueue")
+        self.scheduler = ConcurrentDispatchQueueScheduler(queue: queue)
+    }
 
     func createRealm() throws -> Realm {
-        let config = Realm.Configuration(fileURL: URL(fileURLWithPath: FileUtils.pathInDocuments(realmFileName)))
+        let config = Realm.Configuration(fileURL: URL(fileURLWithPath: FileUtils.pathInDocuments(fileName)))
         return try Realm(configuration: config)
     }
 }
