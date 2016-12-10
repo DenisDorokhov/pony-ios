@@ -5,18 +5,15 @@
 
 import RxSwift
 
-fileprivate class ArtworkDownloadChannel {
+fileprivate class ArtworkDownloadQueue {
 
     let artwork: Int64
-    let queue: PublishSubject<Observable<Int>>
+    let queue: TaskPool<Int>
 
     var referenceCount: Int = 0 {
         didSet {
-            if oldValue == 0 && referenceCount == 1 {
-                disposable = queue.concat().subscribe()
-            }
             if referenceCount <= 0 {
-                dispose()
+                queue.dispose()
             }
         }
     }
@@ -25,16 +22,11 @@ fileprivate class ArtworkDownloadChannel {
 
     init(_ artwork: Int64) {
         self.artwork = artwork
-        queue = PublishSubject()
+        queue = TaskPool(maxConcurrent: 1)
     }
     
     deinit {
-        dispose()
-    }
-
-    private func dispose() {
-        disposable?.dispose()
-        disposable = nil
+        queue.dispose()
     }
 }
 
@@ -49,7 +41,7 @@ class ArtworkService {
     let storageUrlProvider: StorageUrlProvider
 
     private var artworkToUsageCount: [Int64: Int] = [:]
-    private var artworkToChannel: [Int64: ArtworkDownloadChannel] = [:]
+    private var artworkToQueue: [Int64: ArtworkDownloadQueue] = [:]
 
     private var fileOperationScheduler = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .default))
 
@@ -60,79 +52,57 @@ class ArtworkService {
     }
 
     func useOrDownload(artwork: Int64, url: String) -> Observable<Int> {
-        return Observable.create { observer in
-            let disposeSignal = ReplaySubject<Void>.createUnbounded()
-            self.retainChannel(forArtwork: artwork).onNext(
-                            self.fetchUsageCount(forArtwork: artwork).flatMap {
-                                self.useOrDownload(artwork: artwork, url: url, usageCount: $0)
-                            }.takeUntil(disposeSignal).do(onNext: {
-                                self.cacheUsageCount($0, forArtwork: artwork)
-                                observer.onNext($0)
-                                observer.onCompleted()
-                            }, onError: {
-                                observer.onError($0)
-                            }, onDispose: {
-                                self.releaseChannel(forArtwork: artwork)
-                                Log.debug("Use / download cancelled for artwork '\(artwork)'.")
-                            }))
-            return Disposables.create {
-                disposeSignal.onNext()
-                disposeSignal.onCompleted()
-            }
+        return Observable.deferred {
+            self.retainQueue(forArtwork: artwork).add(self.fetchUsageCount(forArtwork: artwork).flatMap {
+                        self.useOrDownload(artwork: artwork, url: url, usageCount: $0)
+                    }).do(onNext: {
+                        self.cacheUsageCount($0, forArtwork: artwork)
+                    }, onDispose: {
+                        self.releaseQueue(forArtwork: artwork)
+                    })
         }
     }
 
     func releaseOrRemove(artwork: Int64) -> Observable<Int> {
-        return Observable.create { observer in
-            let disposeSignal = ReplaySubject<Void>.createUnbounded()
-            self.retainChannel(forArtwork: artwork).onNext(
-                            self.fetchUsageCount(forArtwork: artwork).flatMap {
-                                self.releaseOrRemove(artwork: artwork, usageCount: $0)
-                            }.takeUntil(disposeSignal).do(onNext: {
-                                self.cacheUsageCount($0, forArtwork: artwork)
-                                observer.onNext($0)
-                                observer.onCompleted()
-                            }, onError: {
-                                observer.onError($0)
-                            }, onDispose: {
-                                self.releaseChannel(forArtwork: artwork)
-                                Log.debug("Release / removal cancelled for artwork '\(artwork)'.")
-                            }))
-            return Disposables.create {
-                disposeSignal.onNext()
-                disposeSignal.onCompleted()
-            }
+        return Observable.deferred {
+            self.retainQueue(forArtwork: artwork).add(self.fetchUsageCount(forArtwork: artwork).flatMap {
+                        self.releaseOrRemove(artwork: artwork, usageCount: $0)
+                    }).do(onNext: {
+                        self.cacheUsageCount($0, forArtwork: artwork)
+                    }, onDispose: {
+                        self.releaseQueue(forArtwork: artwork)
+                    })
         }
     }
 
-    private func retainChannel(forArtwork artwork: Int64) -> PublishSubject<Observable<Int>> {
-        if let channel = artworkToChannel[artwork] {
-            let newReferenceCount = channel.referenceCount + 1
-            Log.verbose("Retaining channel for artwork '\(artwork)': \(newReferenceCount).")
-            channel.referenceCount = newReferenceCount
-            return channel.queue
+    private func retainQueue(forArtwork artwork: Int64) -> TaskPool<Int> {
+        if let queue = artworkToQueue[artwork] {
+            let newReferenceCount = queue.referenceCount + 1
+            Log.verbose("Retaining queue for artwork '\(artwork)': \(newReferenceCount).")
+            queue.referenceCount = newReferenceCount
+            return queue.queue
         } else {
-            Log.verbose("Creating channel for artwork '\(artwork)'.")
-            let channel = ArtworkDownloadChannel(artwork)
-            channel.referenceCount = 1
-            artworkToChannel[artwork] = channel
-            return channel.queue
+            Log.verbose("Creating queue for artwork '\(artwork)'.")
+            let queue = ArtworkDownloadQueue(artwork)
+            queue.referenceCount = 1
+            artworkToQueue[artwork] = queue
+            return queue.queue
         }
     }
 
-    private func releaseChannel(forArtwork artwork: Int64) {
-        if let channel = artworkToChannel[artwork] {
-            if channel.referenceCount <= 1 {
-                Log.verbose("Removing channel for artwork '\(artwork)'.")
-                channel.referenceCount = 0
-                artworkToChannel.removeValue(forKey: artwork)
+    private func releaseQueue(forArtwork artwork: Int64) {
+        if let queue = artworkToQueue[artwork] {
+            if queue.referenceCount <= 1 {
+                Log.verbose("Removing queue for artwork '\(artwork)'.")
+                queue.referenceCount = 0
+                artworkToQueue.removeValue(forKey: artwork)
             } else {
-                let newReferenceCount = channel.referenceCount - 1
-                Log.verbose("Releasing channel for artwork '\(artwork)': \(newReferenceCount).")
-                channel.referenceCount = newReferenceCount
+                let newReferenceCount = queue.referenceCount - 1
+                Log.verbose("Releasing queue for artwork '\(artwork)': \(newReferenceCount).")
+                queue.referenceCount = newReferenceCount
             }
         } else {
-            Log.warn("No channel to release for artwork '\(artwork)'.")
+            Log.warn("No queue to release for artwork '\(artwork)'.")
         }
     }
 

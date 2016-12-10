@@ -15,17 +15,29 @@ class ApiServiceQueued: ApiService {
     private(set) var runningImageRequests = Variable(0)
     private(set) var runningSongRequests = Variable(0)
 
-    private let imagePool = PublishSubject<Observable<UIImage>>()
-    private let songPool = PublishSubject<Observable<Double>>()
+    private let imagePool: TaskPool<UIImage>
+    private let songPool: TaskPool<Double>
 
     private let disposeBag = DisposeBag()
 
     init(targetService: ApiService, maxConcurrentImageRequests: Int = 8, maxConcurrentSongRequests: Int = 3) {
+        
         self.targetService = targetService
         self.maxConcurrentImageRequests = maxConcurrentImageRequests
         self.maxConcurrentSongRequests = maxConcurrentSongRequests
-        imagePool.merge(maxConcurrent: maxConcurrentImageRequests).subscribe().addDisposableTo(disposeBag)
-        songPool.merge(maxConcurrent: maxConcurrentSongRequests).subscribe().addDisposableTo(disposeBag)
+        
+        imagePool = TaskPool(maxConcurrent: maxConcurrentImageRequests)
+        imagePool.addDisposableTo(disposeBag)
+        
+        songPool = TaskPool(maxConcurrent: maxConcurrentSongRequests)
+        songPool.addDisposableTo(disposeBag)
+        
+        imagePool.runningTasks.asObservable().subscribe(onNext: { [weak self] value in
+                    self?.runningImageRequests.value = value
+                }).addDisposableTo(disposeBag)
+        songPool.runningTasks.asObservable().subscribe(onNext: { [weak self] in
+                    self?.runningSongRequests.value = $0
+                }).addDisposableTo(disposeBag)
     }
 
     func getInstallation() -> Observable<Installation> {
@@ -57,44 +69,10 @@ class ApiServiceQueued: ApiService {
     }
 
     func downloadImage(atUrl url: String) -> Observable<UIImage> {
-        return Observable.create { observer in
-            let disposeSignal = ReplaySubject<Void>.createUnbounded()
-            self.imagePool.onNext(self.targetService.downloadImage(atUrl: url)
-                    .do(onNext: {
-                        observer.onNext($0)
-                    }, onError: {
-                        observer.onError($0)
-                    }, onCompleted: {
-                        self.runningImageRequests.value -= 1
-                        observer.onCompleted()
-                    }, onSubscribe: {
-                        self.runningImageRequests.value += 1
-                    }).takeUntil(disposeSignal))
-            return Disposables.create {
-                disposeSignal.onNext()
-                disposeSignal.onCompleted()
-            }
-        }
+        return imagePool.add(targetService.downloadImage(atUrl: url))
     }
 
     func downloadSong(atUrl url: String, toFile file: String) -> Observable<Double> {
-        return Observable.create { observer in
-            let disposeSignal = ReplaySubject<Void>.createUnbounded()
-            self.songPool.onNext(self.targetService.downloadSong(atUrl: url, toFile: file)
-                    .do(onNext: {
-                        observer.onNext($0)
-                    }, onError: {
-                        observer.onError($0)
-                    }, onCompleted: {
-                        self.runningSongRequests.value -= 1
-                        observer.onCompleted()
-                    }, onSubscribe: {
-                        self.runningSongRequests.value += 1
-                    }).takeUntil(disposeSignal))
-            return Disposables.create {
-                disposeSignal.onNext()
-                disposeSignal.onCompleted()
-            }
-        }
+        return songPool.add(targetService.downloadSong(atUrl: url, toFile: file))
     }
 }

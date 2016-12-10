@@ -63,6 +63,7 @@
 		B3D39D1684378F2E9A2AD74D /* EventBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D392BE2BB3DCC0B9AB2A50 /* EventBus.swift */; };
 		B3D39D45FE77D0F26AA72508 /* AbstractRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D3921D7E6C2366A1443C5F /* AbstractRealm.swift */; };
 		B3D39D5A9D1C39DD3E571E32 /* song-18_4_3.json in Resources */ = {isa = PBXBuildFile; fileRef = B3D392E2EDD048A00C8701BD /* song-18_4_3.json */; };
+		B3D39DDDCD294D3603EDD63A /* TaskPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D39730A332BC33CD571246 /* TaskPool.swift */; };
 		B3D39E2913D9BFB5C1EB49FB /* song-15_3_3.json in Resources */ = {isa = PBXBuildFile; fileRef = B3D39DD149B4B0012CCC338D /* song-15_3_3.json */; };
 		B3D39EE7048D50099D8918E5 /* RandomUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D392642E763EE7E6F40590 /* RandomUtils.swift */; };
 		B3D39EED0B82C8F41D70BD23 /* SongRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D397D8A1AC34CF1200F072 /* SongRealm.swift */; };
@@ -135,6 +136,7 @@
 		B3D3968FF0D48F88A66406EC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B3D396E7055EC3642CA17602 /* TokenPairDaoSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenPairDaoSpec.swift; sourceTree = "<group>"; };
 		B3D396F8A329884CC74069ED /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
+		B3D39730A332BC33CD571246 /* TaskPool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskPool.swift; sourceTree = "<group>"; };
 		B3D39777F76DF07A5F4A3194 /* AlbumRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumRealm.swift; sourceTree = "<group>"; };
 		B3D397D8A1AC34CF1200F072 /* SongRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongRealm.swift; sourceTree = "<group>"; };
 		B3D3983968CF3E77D6F3B7CB /* song.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song.mp3; sourceTree = "<group>"; };
@@ -343,6 +345,7 @@
 				B3D39BFF235F286FB8F8B306 /* XCGLogDelegate.swift */,
 				375B714FE45E2B27A41661AF /* Cache.swift */,
 				375B7356F5C2315E1F1978BA /* HanekeCache.swift */,
+				B3D39730A332BC33CD571246 /* TaskPool.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -662,6 +665,7 @@
 				375B7CCA2A577D9AC8DC8921 /* PonyError.swift in Sources */,
 				B3D39BBE162CFD1A454EF21B /* SongService.swift in Sources */,
 				B3D3980EF57C6C536C6F413D /* StorageUrlProvider.swift in Sources */,
+				B3D39DDDCD294D3603EDD63A /* TaskPool.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
