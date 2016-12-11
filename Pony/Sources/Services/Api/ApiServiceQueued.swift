@@ -15,8 +15,8 @@ class ApiServiceQueued: ApiService {
     private(set) var runningImageRequests = Variable(0)
     private(set) var runningSongRequests = Variable(0)
 
-    private let imagePool: TaskPool<UIImage>
-    private let songPool: TaskPool<Double>
+    private let imagePool: TaskPool
+    private let songPool: TaskPool
 
     private let disposeBag = DisposeBag()
 

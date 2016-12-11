@@ -5,7 +5,7 @@
 
 import RxSwift
 
-class TaskPool<T>: Disposable {
+class TaskPool: Disposable {
 
     let maxConcurrent: Int
     let runningTasks: Variable<Int>
@@ -22,7 +22,7 @@ class TaskPool<T>: Disposable {
         self.runningTasks = Variable(0)
     }
     
-    func add(_ observable: Observable<T>) -> Observable<T> {
+    func add<T>(_ observable: Observable<T>) -> Observable<T> {
         return Observable.create { observer in
             let disposeSignal = ReplaySubject<Void>.createUnbounded()
             self.lazySubject().onNext(observable

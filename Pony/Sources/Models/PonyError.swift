@@ -7,18 +7,22 @@ import Foundation
 
 enum PonyError: Error, CustomStringConvertible {
 
+    case unexpected
     case offline
     case timeout
     case cancelled
     case notFound
-    case unexpected
     case response(errors: [ResponseError])
 
-    func fetchResponseError(byCode codes: [String]) -> ResponseError? {
-        return fetchResponseErrors(byCodes: codes).first
+    func fetchResponseError(byCodeIn codes: String...) -> ResponseError? {
+        return doFetchResponseErrors(byCodeIn: codes).first
     }
 
-    func fetchResponseErrors(byCodes codes: [String]) -> [ResponseError] {
+    func fetchResponseErrors(byCodeIn codes: String...) -> [ResponseError] {
+        return doFetchResponseErrors(byCodeIn: codes)
+    }
+    
+    private func doFetchResponseErrors(byCodeIn codes: [String]) -> [ResponseError] {
         var result: [ResponseError] = []
         if case let .response(errors) = self {
             for error in errors {
@@ -35,6 +39,8 @@ enum PonyError: Error, CustomStringConvertible {
     var description: String {
         get {
             switch self {
+            case .unexpected:
+                return "PonyError.unexpected"
             case .offline:
                 return "PonyError.offline"
             case .timeout:
@@ -43,8 +49,6 @@ enum PonyError: Error, CustomStringConvertible {
                 return "PonyError.cancelled"
             case .notFound:
                 return "PonyError.notFound"
-            case .unexpected:
-                return "PonyError.unexpected"
             case .response(let errors):
                 return "PonyError.response{errors=\(errors)}"
             }

@@ -8,7 +8,8 @@ import RxSwift
 fileprivate class ArtworkDownloadQueue {
 
     let artwork: Int64
-    let queue: TaskPool<Int>
+    
+    let queue = TaskPool(maxConcurrent: 1)
 
     var referenceCount: Int = 0 {
         didSet {
@@ -22,7 +23,6 @@ fileprivate class ArtworkDownloadQueue {
 
     init(_ artwork: Int64) {
         self.artwork = artwork
-        queue = TaskPool(maxConcurrent: 1)
     }
     
     deinit {
@@ -75,7 +75,7 @@ class ArtworkService {
         }
     }
 
-    private func retainQueue(forArtwork artwork: Int64) -> TaskPool<Int> {
+    private func retainQueue(forArtwork artwork: Int64) -> TaskPool {
         if let queue = artworkToQueue[artwork] {
             let newReferenceCount = queue.referenceCount + 1
             Log.verbose("Retaining queue for artwork '\(artwork)': \(newReferenceCount).")
