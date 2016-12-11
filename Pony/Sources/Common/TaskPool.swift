@@ -10,7 +10,7 @@ class TaskPool<T>: Disposable {
     let maxConcurrent: Int
     let runningTasks: Variable<Int>
     
-    private var subject: PublishSubject<Observable<T>>?
+    private var subject: PublishSubject<Observable<Void>>?
     private var disposable: Disposable?
     
     convenience init() {
@@ -35,7 +35,7 @@ class TaskPool<T>: Disposable {
                         observer.onCompleted()
                     }, onSubscribe: {
                         self.runningTasks.value += 1
-                    }).takeUntil(disposeSignal))
+                    }).map { _ in }.catchErrorJustReturn().takeUntil(disposeSignal))
             return Disposables.create {
                 disposeSignal.onNext()
                 disposeSignal.onCompleted()
@@ -50,11 +50,11 @@ class TaskPool<T>: Disposable {
         subject = nil
     }
     
-    private func lazySubject() -> PublishSubject<Observable<T>> {
+    private func lazySubject() -> PublishSubject<Observable<Void>> {
         if let subject = subject {
             return subject
         }
-        let createdSubject = PublishSubject<Observable<T>>()
+        let createdSubject = PublishSubject<Observable<Void>>()
         subject = createdSubject
         disposable = createdSubject.merge(maxConcurrent: maxConcurrent).subscribe()
         return createdSubject
