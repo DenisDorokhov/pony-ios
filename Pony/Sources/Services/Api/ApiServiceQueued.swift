@@ -70,13 +70,13 @@ class ApiServiceQueued: ApiService {
 
     func downloadImage(atUrl url: String) -> Observable<UIImage> {
         return Observable.deferred {
-            imagePool.add(targetService.downloadImage(atUrl: url))
+            self.imagePool.add(self.targetService.downloadImage(atUrl: url))
         }
     }
 
     func downloadSong(atUrl url: String, toFile file: String) -> Observable<Double> {
         return Observable.deferred {
-            songPool.add(targetService.downloadSong(atUrl: url, toFile: file))
+            self.songPool.add(self.targetService.downloadSong(atUrl: url, toFile: file))
         }
     }
 }
