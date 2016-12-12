@@ -8,6 +8,6 @@ import RxBlocking
 
 extension ObservableConvertibleType {
     public func toTestBlocking() -> BlockingObservable<E> {
-        return toBlocking(timeout: 5)
+        return toBlocking(timeout: 30)
     }
 }

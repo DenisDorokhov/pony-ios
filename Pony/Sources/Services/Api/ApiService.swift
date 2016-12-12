@@ -228,6 +228,7 @@ class ApiServiceImpl: ApiService {
             if responseValue.successful ?? false {
                 if let data = responseValue.data {
                     observer.onNext(data)
+                    observer.onCompleted()
                 } else {
                     Log.error("API returned nil data object.")
                     observer.onError(PonyError.unexpected)

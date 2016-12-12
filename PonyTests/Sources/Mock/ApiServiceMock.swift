@@ -28,47 +28,57 @@ class ApiServiceMock: ApiService {
     var didCallGetArtistAlbums = false
     var didCallDownloadImage = false
     var didCallDownloadSong = false
+    
+    var getInstallationDelay = 0.1
+    var authenticateDelay = 0.1
+    var logoutDelay = 0.1
+    var getCurrentUserDelay = 0.1
+    var refreshTokenDelay = 0.1
+    var getArtistsDelay = 0.1
+    var getArtistAlbumsDelay = 0.1
+    var downloadImageDelay = 0.3
+    var downloadSongDelay = 0.5
 
     var error = PonyError.unexpected
 
     func getInstallation() -> Observable<Installation> {
-        return buildObservable(installation) {
+        return buildObservable(installation, delay: getInstallationDelay) {
             self.didCallGetInstallation = true
         }
     }
 
     func authenticate(credentials: Credentials) -> Observable<Authentication> {
-        return buildObservable(authentication) {
+        return buildObservable(authentication, delay: authenticateDelay) {
             self.didCallAuthenticate = true
         }
     }
 
     func logout() -> Observable<User> {
-        return buildObservable(logoutUser) {
+        return buildObservable(logoutUser, delay: logoutDelay) {
             self.didCallLogout = true
         }
     }
 
     func getCurrentUser() -> Observable<User> {
-        return buildObservable(currentUser) {
+        return buildObservable(currentUser, delay: getCurrentUserDelay) {
             self.didCallGetCurrentUser = true
         }
     }
 
     func refreshToken() -> Observable<Authentication> {
-        return buildObservable(refreshTokenAuthentication) {
+        return buildObservable(refreshTokenAuthentication, delay: refreshTokenDelay) {
             self.didCallRefreshToken = true
         }
     }
 
     func getArtists() -> Observable<[Artist]> {
-        return buildObservable(artists) {
+        return buildObservable(artists, delay: getArtistsDelay) {
             self.didCallGetArtists = true
         }
     }
 
     func getArtistAlbums(artistId: Int64) -> Observable<ArtistAlbums> {
-        return buildObservable(artistAlbums) {
+        return buildObservable(artistAlbums, delay: getArtistAlbumsDelay) {
             self.didCallGetArtistAlbums = true
         }
     }
@@ -81,7 +91,7 @@ class ApiServiceMock: ApiService {
             } else {
                 image = nil
             }
-            return self.buildObservable(image, delay: 0.3) {
+            return self.buildObservable(image, delay: self.downloadImageDelay) {
                 self.didCallDownloadImage = true
             }
         }
@@ -96,10 +106,10 @@ class ApiServiceMock: ApiService {
             } else {
                 return Observable.error(self.error)
             }
-        }.delay(0.5, scheduler: MainScheduler.instance)
+        }.delay(downloadSongDelay, scheduler: MainScheduler.instance)
     }
     
-    private func buildObservable<T>(_ value: T?, delay: RxTimeInterval = 0.1, action: @escaping () -> Void) -> Observable<T> {
+    private func buildObservable<T>(_ value: T?, delay: RxTimeInterval, action: @escaping () -> Void) -> Observable<T> {
         return Observable.deferred {
             action()
             if let value = value {
