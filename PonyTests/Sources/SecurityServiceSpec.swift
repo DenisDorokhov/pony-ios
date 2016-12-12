@@ -135,14 +135,15 @@ class SecurityServiceSpec: QuickSpec {
             
             it("should logout") {
                 
-                try! service.logout().toBlocking().first()
+                _ = try! service.updateAuthenticationStatus().toBlocking().first()!
+                let user = try! service.logout().toBlocking().first()
+                expect(user).notTo(beNil())
                 expect(service.isAuthenticated).to(beFalse())
 
-                expect(apiServiceMock.didCallGetCurrentUser).to(beTrue())
                 expect(apiServiceMock.didCallLogout).to(beTrue())
 
                 expect(delegate.didAuthenticateUser).to(beNil())
-                expect(delegate.didUpdateCurrentUser).to(beNil())
+                expect(delegate.didUpdateCurrentUser).toNot(beNil())
                 expect(delegate.didLogoutUser).toNot(beNil())
             }
             
@@ -156,6 +157,19 @@ class SecurityServiceSpec: QuickSpec {
                         })
                 _ = service.logout().subscribe()
                 expect(errorRequests).toEventually(equal(2))
+            }
+            
+            it("should throw error when authenticating already authenticated user") {
+                _ = try! service.authenticate(credentials: credentials).toBlocking().first()
+                expect { 
+                    _ = try service.authenticate(credentials: credentials).toBlocking().first() 
+                }.to(throwError(PonyError.alreadyAuthenticated))
+            }
+            
+            it("should throw error when logging out not authenticated user") {
+                expect { 
+                    _ = try service.logout().toBlocking().first() 
+                }.to(throwError(PonyError.notAuthenticated))
             }
         }
     }

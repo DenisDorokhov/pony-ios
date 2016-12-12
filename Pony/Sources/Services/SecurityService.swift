@@ -75,14 +75,17 @@ class SecurityService {
 
     func authenticate(credentials: Credentials) -> Observable<User> {
         return enqueue {
-            Log.info("Authenticating user '\(credentials.email)'...")
+            if self.isAuthenticated {
+                throw PonyError.alreadyAuthenticated
+            }
+            Log.info("Authenticating user '\(credentials.email ?? "")'...")
             return self.apiService.authenticate(credentials: credentials)
                     .do(onNext: { authentication in
-                        Log.info("User '\(authentication.user.email)' has been authenticated.")
+                        Log.info("User '\(authentication.user.email ?? "")' has been authenticated.")
                         self.updateAuthentication(authentication)
                         self.propagateAuthentication(user: authentication.user)
                     }, onError: { error in
-                        Log.error("Authentication failed for user '\(credentials.email)': \(error)")
+                        Log.error("Authentication failed for user '\(credentials.email ?? "")': \(error)")
                     }).map {
                         return $0.user
                     }
@@ -107,26 +110,23 @@ class SecurityService {
         }
     }
 
-    func logout() -> Observable<Void> {
+    func logout() -> Observable<User> {
         return Observable.deferred {
             self.errorSignal.onNext()
             return self.enqueue {
-                let getCurrentUser: Observable<User>
                 if let user = self.currentUser {
-                    getCurrentUser = Observable.just(user)
+                    return self.apiService.logout().do(onNext: { _ in
+                        Log.info("User '\(user.email ?? "")' has logged out successfully.")
+                        self.clearAuthentication()
+                        self.propagateLogout(user: user)
+                    }, onError: { error in
+                        Log.error("Could not logout user '\(user.email ?? "")': \(error).")
+                        self.clearAuthentication()
+                        self.propagateLogout(user: user)
+                    }).catchErrorJustReturn(user)
                 } else {
-                    getCurrentUser = self.apiService.getCurrentUser()
+                    throw PonyError.notAuthenticated
                 }
-                return getCurrentUser.flatMap { user in
-                    self.apiService.logout().do(onNext: { _ in
-                                Log.info("User '\(user.email)' has logged out successfully.")
-                            }, onError: { error in
-                                Log.error("Could not logout user '\(user.email)': \(error).")
-                            }).catchErrorJustReturn(user)
-                }.do(onNext: { user in
-                    self.clearAuthentication()
-                    self.propagateLogout(user: user)
-                }).map { _ in }
             }
         }
     }
@@ -136,7 +136,7 @@ class SecurityService {
         return apiService.refreshToken().do(onNext: { authentication in
             self.updateAuthentication(authentication)
             self.propagateCurrentUserUpdate(user: authentication.user)
-            Log.info("Token for user '\(authentication.user.email)' has been refreshed.")
+            Log.info("Token for user '\(authentication.user.email ?? "")' has been refreshed.")
         }, onError: { error in
             Log.error("Could not refresh token: \(error)")
         })

@@ -12,6 +12,8 @@ enum PonyError: Error, CustomStringConvertible {
     case timeout
     case cancelled
     case notFound
+    case notAuthenticated
+    case alreadyAuthenticated
     case response(errors: [ResponseError])
 
     func fetchResponseError(byCodeIn codes: String...) -> ResponseError? {
@@ -49,6 +51,10 @@ enum PonyError: Error, CustomStringConvertible {
                 return "PonyError.cancelled"
             case .notFound:
                 return "PonyError.notFound"
+            case .notAuthenticated:
+                return "PonyError.notAuthenticated"
+            case .alreadyAuthenticated:
+                return "PonyError.alreadyAuthenticated"
             case .response(let errors):
                 return "PonyError.response{errors=\(errors)}"
             }
