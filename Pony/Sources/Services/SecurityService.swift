@@ -113,20 +113,18 @@ class SecurityService {
     func logout() -> Observable<User> {
         return Observable.deferred {
             self.errorSignal.onNext()
-            return self.enqueue {
-                if let user = self.currentUser {
-                    return self.apiService.logout().do(onNext: { _ in
-                        Log.info("User '\(user.email ?? "")' has logged out successfully.")
-                        self.clearAuthentication()
-                        self.propagateLogout(user: user)
-                    }, onError: { error in
-                        Log.error("Could not logout user '\(user.email ?? "")': \(error).")
-                        self.clearAuthentication()
-                        self.propagateLogout(user: user)
-                    }).catchErrorJustReturn(user)
-                } else {
-                    throw PonyError.notAuthenticated
-                }
+            if let user = self.currentUser {
+                Log.info("Logging out user '\(user.email ?? "")'...")
+                self.apiService.logout().do(onNext: { _ in
+                    Log.info("User '\(user.email ?? "")' has logged out successfully.")
+                }, onError: { error in
+                    Log.error("Could not logout user '\(user.email ?? "")': \(error).")
+                }).subscribe().addDisposableTo(self.disposeBag)
+                self.clearAuthentication()
+                self.propagateLogout(user: user)
+                return Observable.just(user)
+            } else {
+                throw PonyError.notAuthenticated
             }
         }
     }
