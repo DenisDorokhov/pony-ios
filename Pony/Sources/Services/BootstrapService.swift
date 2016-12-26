@@ -23,8 +23,6 @@ class BootstrapService {
     let apiUrlDao: ApiUrlDao
     let securityService: SecurityService
 
-    private var isBootstrapping = false
-
     private let disposeBag = DisposeBag()
 
     init(apiUrlDao: ApiUrlDao, securityService: SecurityService) {
@@ -33,39 +31,30 @@ class BootstrapService {
     }
 
     func bootstrap(delegate: BootstrapServiceDelegate?) {
-        if !isBootstrapping {
 
-            Log.info("Bootstrapping...")
-            isBootstrapping = true
-            delegate?.bootstrapServiceDidStartBootstrap(self)
+        Log.info("Bootstrapping...")
+        delegate?.bootstrapServiceDidStartBootstrap(self)
 
-            if apiUrlDao.fetchUrl() != nil {
-                if let currentUser = securityService.currentUser {
-                    isBootstrapping = false
-                    propagateBootstrapFinish(user: currentUser, delegate: delegate)
-                } else {
-                    delegate?.bootstrapServiceDidStartBackgroundActivity(self)
-                    securityService.updateAuthenticationStatus().do(onNext: { state in
-                                self.isBootstrapping = false
-                                switch state {
-                                case .notAuthenticated:
-                                    Log.info("Bootstrapping requires authentication.")
-                                    delegate?.bootstrapServiceDidRequireAuthentication(self)
-                                case .authenticated(let user):
-                                    self.propagateBootstrapFinish(user: user, delegate: delegate)
-                                }
-                            }, onError: { error in
-                                self.isBootstrapping = false
-                                delegate?.bootstrapService(self, didFailWithError: error)
-                            }).subscribe().addDisposableTo(disposeBag)
-                }
+        if apiUrlDao.fetchUrl() != nil {
+            if let currentUser = securityService.currentUser {
+                propagateBootstrapFinish(user: currentUser, delegate: delegate)
             } else {
-                Log.info("Bootstrapping requires server URL.")
-                isBootstrapping = false
-                delegate?.bootstrapServiceDidRequireApiUrl(self)
+                delegate?.bootstrapServiceDidStartBackgroundActivity(self)
+                securityService.updateAuthenticationStatus().do(onNext: { state in
+                            switch state {
+                            case .notAuthenticated:
+                                Log.info("Bootstrapping requires authentication.")
+                                delegate?.bootstrapServiceDidRequireAuthentication(self)
+                            case .authenticated(let user):
+                                self.propagateBootstrapFinish(user: user, delegate: delegate)
+                            }
+                        }, onError: { error in
+                            delegate?.bootstrapService(self, didFailWithError: error)
+                        }).subscribe().addDisposableTo(disposeBag)
             }
         } else {
-            Log.warn("Could not bootstrap: already bootstrapping.")
+            Log.info("Bootstrapping requires server URL.")
+            delegate?.bootstrapServiceDidRequireApiUrl(self)
         }
     }
 
