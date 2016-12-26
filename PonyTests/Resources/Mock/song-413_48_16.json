@@ -1,0 +1,30 @@
+{
+  "id":413,
+  "updateDate":null,
+  "url":"http://pony.dorokhov.net/demo/audio/413",
+  "size":10000110,
+  "duration":386,
+  "discNumber":null,
+  "trackNumber":1,
+  "artistName":"The James Quintet",
+  "name":"DC",
+  "album":{
+    "id":48,
+    "name":"Live - Trenton Avant Garde Fesival 09-12-1992",
+    "year":1992,
+    "artwork":48,
+    "artworkUrl":"http://pony.dorokhov.net/demo/files/48",
+    "artist":{
+      "id":16,
+      "name":"The James Quintet",
+      "artwork":47,
+      "artworkUrl":"http://pony.dorokhov.net/demo/files/47"
+    }
+  },
+  "genre":{
+    "id":1,
+    "name":"(255)",
+    "artwork":37,
+    "artworkUrl":"http://pony.dorokhov.net/demo/files/37"
+  }
+}

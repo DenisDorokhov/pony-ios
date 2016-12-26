@@ -23,6 +23,9 @@ PODS:
   - RxCocoa (3.0.1):
     - RxSwift (~> 3.0)
   - RxSwift (3.0.1)
+  - SQLite.swift (0.11.0):
+    - SQLite.swift/standard (= 0.11.0)
+  - SQLite.swift/standard (0.11.0)
   - STRegex (0.4.2)
   - SwiftDate (4.0.7)
   - Swinject (2.0.0-beta.2)
@@ -45,6 +48,7 @@ DEPENDENCIES:
   - RxBlocking (= 3.0.1)
   - RxCocoa (= 3.0.1)
   - RxSwift (= 3.0.1)
+  - SQLite.swift (= 0.11.0)
   - STRegex (= 0.4.2)
   - SwiftDate (= 4.0.7)
   - Swinject (= 2.0.0-beta.2)
@@ -77,11 +81,12 @@ SPEC CHECKSUMS:
   RxBlocking: 5de082d09d1ab45b49173f309f1a97d6b50f34c4
   RxCocoa: 15a52fc590dcc700cb4a690a633b5c5184ce3a78
   RxSwift: af5680055c4ad04480189c52d28385b1029493a6
+  SQLite.swift: 9a26273607d3077a2e5a8d33486e9989f8404c7d
   STRegex: 9b6e0a4300c8442d1aa93241c895eeec4cc56935
   SwiftDate: 0efb04a6751b1ab804049b2b09a69848cd304c12
   Swinject: 69a893192efa9f2cc44be79ef423d04d571b6af9
   XCGLogger: 38063ea89b4c8b23232d18efd2e12eb0005f3ea4
 
-PODFILE CHECKSUM: b0d18046b801fdf034f51a4fc8c621546cd05da2
+PODFILE CHECKSUM: da5bd3a2ce24d2158ffac1d2b449029d2dc92c42
 
 COCOAPODS: 1.1.1

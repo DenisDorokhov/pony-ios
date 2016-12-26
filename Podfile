@@ -16,6 +16,7 @@ target 'Pony' do
   pod 'RealmSwift', '2.0.3'
   pod 'RxCocoa', '3.0.1'
   pod 'RxSwift', '3.0.1'
+  pod 'SQLite.swift', '0.11.0'
   pod 'STRegex', '0.4.2'
   pod 'SwiftDate', '4.0.7'
   pod 'Swinject', '2.0.0-beta.2'

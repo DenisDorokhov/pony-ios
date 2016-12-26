@@ -7,19 +7,42 @@ import RxSwift
 import RealmSwift
 
 class SongService {
+
+    class Context {
+
+        let fileName: String
+
+        let queue: DispatchQueue
+        let scheduler: SchedulerType
+
+        convenience init() {
+            self.init(fileName: "Pony.realm")
+        }
+
+        init(fileName: String) {
+            self.fileName = fileName
+            self.queue = DispatchQueue(label: "Pony.realmQueue")
+            self.scheduler = ConcurrentDispatchQueueScheduler(queue: queue)
+        }
+
+        func createRealm() throws -> Realm {
+            let config = Realm.Configuration(fileURL: URL(fileURLWithPath: FileUtils.pathInDocuments(fileName)))
+            return try Realm(configuration: config)
+        }
+    }
     
-    let realmContext: RealmContext
+    let context: Context
     let storageUrlProvider: StorageUrlProvider
     
-    init(realmContext: RealmContext, storageUrlProvider: StorageUrlProvider) {
-        self.realmContext = realmContext
+    init(context: Context, storageUrlProvider: StorageUrlProvider) {
+        self.context = context
         self.storageUrlProvider = storageUrlProvider
     }
 
     func getArtists() -> Observable<[Artist]> {
-        return Observable.just().observeOn(realmContext.scheduler).map {
+        return Observable.just().observeOn(context.scheduler).map {
             do {
-                let realm = try self.realmContext.createRealm()
+                let realm = try self.context.createRealm()
                 let artists: [Artist] = realm.objects(ArtistRealm.self).sorted(byProperty: "name").map {
                     $0.toArtist(artworkUrl: self.buildArtworkUrl)
                 }
@@ -32,9 +55,9 @@ class SongService {
     }
 
     func getArtistAlbums(forArtist artist: Int64) -> Observable<ArtistAlbums> {
-        return Observable.just(artist).observeOn(realmContext.scheduler).map {
+        return Observable.just(artist).observeOn(context.scheduler).map {
             do {
-                let realm = try self.realmContext.createRealm()
+                let realm = try self.context.createRealm()
                 var artistAlbums: ArtistAlbums?
                 if let artist = realm.objects(ArtistRealm.self).filter("id == \($0)").first {
                     let albums: [AlbumSongs] = artist.albums.map {
@@ -59,9 +82,9 @@ class SongService {
     }
 
     func save(song: Song) -> Observable<Song> {
-        return Observable.just(song).observeOn(realmContext.scheduler).map {
+        return Observable.just(song).observeOn(context.scheduler).map {
             do {
-                let realm = try self.realmContext.createRealm()
+                let realm = try self.context.createRealm()
                 let songRealm = SongRealm(song: $0)
                 try realm.write {
                     realm.add(songRealm, update: true)
@@ -75,9 +98,9 @@ class SongService {
     }
 
     func delete(song: Int64) -> Observable<Song> {
-        return Observable.just(song).observeOn(realmContext.scheduler).map {
+        return Observable.just(song).observeOn(context.scheduler).map {
             do {
-                let realm = try self.realmContext.createRealm()
+                let realm = try self.context.createRealm()
                 let songRealm = realm.objects(SongRealm.self).filter("id == \($0)").first
                 var deletedSong: Song?
                 if let songRealm = songRealm {
