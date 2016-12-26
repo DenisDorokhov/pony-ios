@@ -102,17 +102,10 @@ class SongService {
 
     private func doDelete(song: SongRealm, realm: Realm) {
         var albumToDelete: AlbumRealm?, artistToDelete: ArtistRealm?
-        var artworksToCheck: [Int64] = []
         if song.album.songs.count == 1 {
             albumToDelete = song.album
-            if let artwork = song.album.artwork.value {
-                artworksToCheck.append(artwork)
-            }
             if song.album.artist.albums.count == 1 {
                 artistToDelete = song.album.artist
-                if let artwork = song.album.artist.artwork.value {
-                    artworksToCheck.append(artwork)
-                }
             }
         }
         realm.delete(song)
