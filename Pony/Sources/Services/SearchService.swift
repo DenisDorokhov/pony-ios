@@ -52,6 +52,7 @@ class SearchServiceImpl: SearchService {
     func createIndex(forArtist artist: Artist) throws {
         let context = try createContextIfNeeded()
         let terms = artist.name ?? ""
+        Log.debug("Creating index for artist '\(artist.id)'.")
         _ = try context.db.run(
                 context.artistsTable.insert(or: .replace,
                         context.docIdColumn <- artist.id, context.termsColumn <- terms))
@@ -61,6 +62,7 @@ class SearchServiceImpl: SearchService {
         let context = try createContextIfNeeded()
         var terms = album.name ?? "" + " "
         terms += album.artist.name ?? "" + " "
+        Log.debug("Creating index for album '\(album.id)'.")
         _ = try context.db.run(
                 context.albumsTable.insert(or: .replace,
                         context.docIdColumn <- album.id, context.termsColumn <- terms))
@@ -72,6 +74,7 @@ class SearchServiceImpl: SearchService {
         terms += song.artistName ?? "" + " "
         terms += song.album.artist.name ?? "" + " "
         terms += song.album.name ?? "" + " "
+        Log.debug("Creating index for song '\(song.id)'.")
         _ = try context.db.run(
                 context.songsTable.insert(or: .replace,
                         context.docIdColumn <- song.id, context.termsColumn <- terms))
@@ -79,6 +82,7 @@ class SearchServiceImpl: SearchService {
 
     func removeIndex(forArtist artist: Int64) throws {
         let context = try createContextIfNeeded()
+        Log.debug("Removing index for artist '\(artist)'.")
         _ = try context.db.run(
                 context.artistsTable
                         .filter(context.docIdColumn == artist)
@@ -87,6 +91,7 @@ class SearchServiceImpl: SearchService {
 
     func removeIndex(forAlbum album: Int64) throws {
         let context = try createContextIfNeeded()
+        Log.debug("Removing index for album '\(album)'.")
         _ = try context.db.run(
                 context.albumsTable
                         .filter(context.docIdColumn == album)
@@ -95,6 +100,7 @@ class SearchServiceImpl: SearchService {
 
     func removeIndex(forSong song: Int64) throws {
         let context = try createContextIfNeeded()
+        Log.debug("Removing index for song '\(song)'.")
         _ = try context.db.run(
                 context.songsTable
                         .filter(context.docIdColumn == song)
@@ -103,6 +109,7 @@ class SearchServiceImpl: SearchService {
 
     func clearIndex() throws {
         let context = try createContextIfNeeded()
+        Log.debug("Clearing index.")
         _ = try context.db.run(context.artistsTable.delete())
         _ = try context.db.run(context.albumsTable.delete())
         _ = try context.db.run(context.songsTable.delete())

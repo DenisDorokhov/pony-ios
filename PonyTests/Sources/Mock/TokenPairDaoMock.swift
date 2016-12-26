@@ -18,9 +18,7 @@ class TokenPairDaoMock: TokenPairDao {
     }
 
     func fetchTokenPair() -> TokenPair? {
-
         fetchTokenPairCallsCount += 1
-
         return tokenPair
     }
 

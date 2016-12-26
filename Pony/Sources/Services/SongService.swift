@@ -30,13 +30,15 @@ class SongService {
             return try Realm(configuration: config)
         }
     }
-    
+
     let context: Context
     let storageUrlProvider: StorageUrlProvider
-    
-    init(context: Context, storageUrlProvider: StorageUrlProvider) {
+    let searchService: SearchService
+
+    init(context: Context, storageUrlProvider: StorageUrlProvider, searchService: SearchService) {
         self.context = context
         self.storageUrlProvider = storageUrlProvider
+        self.searchService = searchService
     }
 
     func getArtists() -> Observable<[Artist]> {
@@ -89,6 +91,9 @@ class SongService {
                 try realm.write {
                     realm.add(songRealm, update: true)
                 }
+                try self.searchService.createIndex(forArtist: song.album.artist)
+                try self.searchService.createIndex(forAlbum: song.album)
+                try self.searchService.createIndex(forSong: song)
                 return songRealm.toSong(artworkUrl: self.buildArtworkUrl, songUrl: self.buildSongUrl)
             } catch let error {
                 Log.error("Could not save song: \(error).")
@@ -105,8 +110,17 @@ class SongService {
                 var deletedSong: Song?
                 if let songRealm = songRealm {
                     deletedSong = songRealm.toSong(artworkUrl: self.buildArtworkUrl, songUrl: self.buildSongUrl)
+                    var deletionResult: (Int64?, Int64?)!
                     try realm.write {
-                        self.doDelete(song: songRealm, realm: realm)
+                        deletionResult = self.doDelete(song: songRealm, realm: realm)
+                    }
+                    let (deletedAlbum, deletedArtist) = deletionResult
+                    try self.searchService.removeIndex(forSong: song)
+                    if let deletedAlbum = deletedAlbum {
+                        try self.searchService.removeIndex(forAlbum: deletedAlbum)
+                    }
+                    if let deletedArtist = deletedArtist {
+                        try self.searchService.removeIndex(forArtist: deletedArtist)
                     }
                 }
                 if let deletedSong = deletedSong {
@@ -123,7 +137,66 @@ class SongService {
         }.observeOn(MainScheduler.instance)
     }
 
-    private func doDelete(song: SongRealm, realm: Realm) {
+    func searchArtists(_ query: String) -> Observable<[Artist]> {
+        return Observable.just(query).observeOn(context.scheduler).map {
+            try self.searchService.searchArtists($0)
+        }.map {
+            do {
+                let realm = try self.context.createRealm()
+                let artists: [Artist] = realm.objects(ArtistRealm.self)
+                        .filter(self.buildSearchResultsQuery($0)).map {
+                            $0.toArtist(artworkUrl: self.buildArtworkUrl)
+                        }
+                return artists
+            } catch let error {
+                Log.error("Could not fetch found artists: \(error).")
+                throw error
+            }
+        }.observeOn(MainScheduler.instance)
+    }
+
+    func searchAlbums(_ query: String) -> Observable<[Album]> {
+        return Observable.just(query).observeOn(context.scheduler).map {
+            try self.searchService.searchAlbums($0)
+        }.map {
+            do {
+                let realm = try self.context.createRealm()
+                let albums: [Album] = realm.objects(AlbumRealm.self)
+                        .filter(self.buildSearchResultsQuery($0)).map {
+                            $0.toAlbum(artworkUrl: self.buildArtworkUrl)
+                        }
+                return albums
+            } catch let error {
+                Log.error("Could not fetch found albums: \(error).")
+                throw error
+            }
+        }.observeOn(MainScheduler.instance)
+    }
+
+    func searchSongs(_ query: String) -> Observable<[Song]> {
+        return Observable.just(query).observeOn(context.scheduler).map {
+            try self.searchService.searchSongs($0)
+        }.map {
+            do {
+                let realm = try self.context.createRealm()
+                let songs: [Song] = realm.objects(SongRealm.self)
+                        .filter(self.buildSearchResultsQuery($0)).map {
+                            $0.toSong(artworkUrl: self.buildArtworkUrl, songUrl: self.buildSongUrl)
+                        }
+                return songs
+            } catch let error {
+                Log.error("Could not fetch found songs: \(error).")
+                throw error
+            }
+        }.observeOn(MainScheduler.instance)
+    }
+    
+    private func buildSearchResultsQuery(_ results: [Int64]) -> String {
+        let ids = results.map { String($0) }.joined(separator: ", ")
+        return "id IN {\(ids)}"
+    }
+
+    private func doDelete(song: SongRealm, realm: Realm) -> (deletedAlbum: Int64?, deletedArtist: Int64?) {
         var albumToDelete: AlbumRealm?, artistToDelete: ArtistRealm?
         if song.album.songs.count == 1 {
             albumToDelete = song.album
@@ -132,21 +205,26 @@ class SongService {
             }
         }
         realm.delete(song)
+        var deletedAlbum: Int64?
         if let albumToDelete = albumToDelete {
+            deletedAlbum = albumToDelete.id
             realm.delete(albumToDelete)
         }
+        var deletedArtist: Int64?
         if let artistToDelete = artistToDelete {
+            deletedArtist = artistToDelete.id
             realm.delete(artistToDelete)
         }
+        return (deletedAlbum, deletedArtist)
     }
-    
+
     private func buildArtworkUrl(_ artwork: Int64?) -> String? {
         if let artwork = artwork {
             return storageUrlProvider.fileUrl(forArtwork: artwork).absoluteString
         }
         return nil
     }
-    
+
     private func buildSongUrl(_ song: Int64) -> String {
         return storageUrlProvider.fileUrl(forSong: song).absoluteString
     }

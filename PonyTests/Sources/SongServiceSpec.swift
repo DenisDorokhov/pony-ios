@@ -15,19 +15,24 @@ class SongServiceSpec: QuickSpec {
     override func spec() {
         describe("SongService") {
 
+            var searchServiceMock: SearchServiceMock!
             var service: SongService!
             beforeEach {
                 TestUtils.cleanAll()
-                service = SongService(context: SongService.Context(), storageUrlProvider: StorageUrlProvider())
+                searchServiceMock = SearchServiceMock()
+                service = SongService(context: SongService.Context(), storageUrlProvider: StorageUrlProvider(), searchService: searchServiceMock)
             }
             afterEach {
                 TestUtils.cleanAll()
             }
 
-            it("should save song") {
+            it("should save song and create index") {
                 let songMock = MockBuilders.buildSongMock()
                 let song = try! service.save(song: songMock).toBlocking().first()!
                 expect(song).toNot(beNil())
+                expect(searchServiceMock.didCallCreateIndexForArtist).to(be(songMock.album.artist))
+                expect(searchServiceMock.didCallCreateIndexForAlbum).to(be(songMock.album))
+                expect(searchServiceMock.didCallCreateIndexForSong).to(be(songMock))
             }
 
             it("should fetch artists") {
@@ -46,12 +51,39 @@ class SongServiceSpec: QuickSpec {
                 expect(artistAlbums.albums[0].songs).to(haveCount(1))
             }
 
-            it("should delete song") {
+            it("should delete song and remove index") {
                 let songMock = MockBuilders.buildSongMock()
                 _ = try! service.save(song: songMock).toBlocking().first()!
                 _ = try! service.delete(song: songMock.id).toBlocking().first()!
                 let artists = try! service.getArtists().toBlocking().first()!
                 expect(artists).to(haveCount(0))
+                expect(searchServiceMock.didCallRemoveIndexForArtist).to(equal(songMock.album.artist.id))
+                expect(searchServiceMock.didCallRemoveIndexForAlbum).to(equal(songMock.album.id))
+                expect(searchServiceMock.didCallRemoveIndexForSong).to(equal(songMock.id))
+            }
+            
+            it("should search artists") {
+                let songMock = MockBuilders.buildSongMock()
+                _ = try! service.save(song: songMock).toBlocking().first()!
+                searchServiceMock.searchArtists = [3]
+                let artists = try! service.searchArtists("bop").toBlocking().first()!
+                expect(artists).to(haveCount(1))
+            }
+            
+            it("should search albums") {
+                let songMock = MockBuilders.buildSongMock()
+                _ = try! service.save(song: songMock).toBlocking().first()!
+                searchServiceMock.searchAlbums = [3]
+                let albums = try! service.searchAlbums("futurs").toBlocking().first()!
+                expect(albums).to(haveCount(1))
+            }
+            
+            it("should search songs") {
+                let songMock = MockBuilders.buildSongMock()
+                _ = try! service.save(song: songMock).toBlocking().first()!
+                searchServiceMock.searchSongs = [15]
+                let songs = try! service.searchSongs("carton").toBlocking().first()!
+                expect(songs).to(haveCount(1))
             }
 
             it("should throw error when song not found") {
