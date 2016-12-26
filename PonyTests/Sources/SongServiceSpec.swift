@@ -30,9 +30,9 @@ class SongServiceSpec: QuickSpec {
                 let songMock = MockBuilders.buildSongMock()
                 let song = try! service.save(song: songMock).toBlocking().first()!
                 expect(song).toNot(beNil())
-                expect(searchServiceMock.didCallCreateIndexForArtist).to(be(songMock.album.artist))
-                expect(searchServiceMock.didCallCreateIndexForAlbum).to(be(songMock.album))
-                expect(searchServiceMock.didCallCreateIndexForSong).to(be(songMock))
+                expect(searchServiceMock.didCallCreateIndexForArtist).to(be(song.album.artist))
+                expect(searchServiceMock.didCallCreateIndexForAlbum).to(be(song.album))
+                expect(searchServiceMock.didCallCreateIndexForSong).to(be(song))
             }
 
             it("should fetch artists") {

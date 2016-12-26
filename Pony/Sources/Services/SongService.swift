@@ -91,49 +91,62 @@ class SongService {
                 try realm.write {
                     realm.add(songRealm, update: true)
                 }
-                try self.searchService.createIndex(forArtist: song.album.artist)
-                try self.searchService.createIndex(forAlbum: song.album)
-                try self.searchService.createIndex(forSong: song)
                 return songRealm.toSong(artworkUrl: self.buildArtworkUrl, songUrl: self.buildSongUrl)
             } catch let error {
                 Log.error("Could not save song: \(error).")
                 throw error
             }
-        }.observeOn(MainScheduler.instance)
+        }.do(onNext: { song in
+            do {
+                try self.searchService.createIndex(forArtist: song.album.artist)
+                try self.searchService.createIndex(forAlbum: song.album)
+                try self.searchService.createIndex(forSong: song)
+            } catch let error {
+                Log.warn("Could not create song index: \(error).")
+            }
+        }).observeOn(MainScheduler.instance)
     }
 
     func delete(song: Int64) -> Observable<Song> {
-        return Observable.just(song).observeOn(context.scheduler).map {
+        return Observable.just(song).observeOn(context.scheduler).map { (song) -> (song: Song, deletedAlbum: Int64?, deletedArtist: Int64?) in
             do {
                 let realm = try self.context.createRealm()
-                let songRealm = realm.objects(SongRealm.self).filter("id == \($0)").first
-                var deletedSong: Song?
+                let songRealm = realm.objects(SongRealm.self).filter("id == \(song)").first
+                var deletedSong: Song?, deletedAlbum: Int64?, deletedArtist: Int64?
                 if let songRealm = songRealm {
                     deletedSong = songRealm.toSong(artworkUrl: self.buildArtworkUrl, songUrl: self.buildSongUrl)
-                    var deletionResult: (Int64?, Int64?)!
+                    var deletionResult: (deletedAlbum: Int64?, deletedArtist: Int64?)!
                     try realm.write {
                         deletionResult = self.doDelete(song: songRealm, realm: realm)
                     }
-                    let (deletedAlbum, deletedArtist) = deletionResult
-                    try self.searchService.removeIndex(forSong: song)
-                    if let deletedAlbum = deletedAlbum {
-                        try self.searchService.removeIndex(forAlbum: deletedAlbum)
-                    }
-                    if let deletedArtist = deletedArtist {
-                        try self.searchService.removeIndex(forArtist: deletedArtist)
-                    }
+                    deletedAlbum = deletionResult.deletedAlbum
+                    deletedArtist = deletionResult.deletedArtist
                 }
                 if let deletedSong = deletedSong {
-                    Log.info("Song '\($0)' deleted.")
-                    return deletedSong
+                    Log.info("Song '\(song)' deleted.")
+                    return (deletedSong, deletedAlbum, deletedArtist)
                 } else {
-                    Log.error("Could not delete song '\($0)': song not found.")
+                    Log.error("Could not delete song '\(song)': song not found.")
                     throw PonyError.notFound
                 }
             } catch let error {
                 Log.error("Could not delete song: \(error).")
                 throw error
             }
+        }.map { (deletionResult) -> Song in
+            let (song, deletedAlbum, deletedArtist) = deletionResult
+            do {
+                try self.searchService.removeIndex(forSong: song.id)
+                if let deletedAlbum = deletedAlbum {
+                    try self.searchService.removeIndex(forAlbum: deletedAlbum)
+                }
+                if let deletedArtist = deletedArtist {
+                    try self.searchService.removeIndex(forArtist: deletedArtist)
+                }
+            } catch let error {
+                Log.warn("Could not remove song index: \(error).")
+            }
+            return song
         }.observeOn(MainScheduler.instance)
     }
 
