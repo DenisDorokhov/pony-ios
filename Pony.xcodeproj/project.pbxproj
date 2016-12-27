@@ -19,6 +19,7 @@
 		375B714FFF8A4DDB63CEA02E /* ObservableConvertibleType+PonyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7BCB4007B42FE53F4D9B /* ObservableConvertibleType+PonyTests.swift */; };
 		375B7223D7812DA1162F0829 /* ApiServiceCached.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B702814F8087D885789CE /* ApiServiceCached.swift */; };
 		375B7329DAF68BF4CF6DF997 /* BootstrapService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B73A1EBF896E871CB2476 /* BootstrapService.swift */; };
+		375B732BEDBB940A9450BF65 /* SongDownloadServiceDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B748B6D40EF70C196223A /* SongDownloadServiceDelegateMock.swift */; };
 		375B737ADEE08F7435329F29 /* SearchServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B71100DD260490B1B8DF9 /* SearchServiceMock.swift */; };
 		375B73912DFE6B45709FD0DB /* SecurityServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7A357527A45B9908FA63 /* SecurityServiceSpec.swift */; };
 		375B73997EDC5651B9F1D714 /* SearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B78ABBFE5D26B2A365699 /* SearchService.swift */; };
@@ -49,7 +50,7 @@
 		375B7F5E716D20F072A08B96 /* Installation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7E997E85862713C3E298 /* Installation.swift */; };
 		52E5A214F285D81E58937FB4 /* Pods_PonyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5401BAD89B9B43540D25D060 /* Pods_PonyTests.framework */; };
 		831CD2A41DF7091800FE271C /* ArtworkServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B70B53E8E5DD27303F915 /* ArtworkServiceSpec.swift */; };
-		831CD2A51DF7092B00FE271C /* ArtworkServiceDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7F10EF7E9D7B47F5BDD7 /* ArtworkServiceDelegateMock.swift */; };
+		831CD2A51DF7092B00FE271C /* ArtworkUsageCountProviderMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7F10EF7E9D7B47F5BDD7 /* ArtworkUsageCountProviderMock.swift */; };
 		B3D3902E7893D46D205ACE20 /* ApiUrlDaoSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D3993F2CA6FF180C29CBAF /* ApiUrlDaoSpec.swift */; };
 		B3D39065FE2FD5E479605B9D /* GenreRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D399253660454872AC4BC4 /* GenreRealm.swift */; };
 		B3D391E6D70BBEA00EE53E82 /* song-17_4_3.json in Resources */ = {isa = PBXBuildFile; fileRef = B3D393EACD0B5558F15C9B12 /* song-17_4_3.json */; };
@@ -117,6 +118,7 @@
 		375B74251FA34680BD6883BF /* ApiServiceQueuedSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiServiceQueuedSpec.swift; sourceTree = "<group>"; };
 		375B743AAF5C6191E6142529 /* Genre.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		375B74756CA54B89B914F37D /* Song.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		375B748B6D40EF70C196223A /* SongDownloadServiceDelegateMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongDownloadServiceDelegateMock.swift; sourceTree = "<group>"; };
 		375B74B0D4A37B5F8602CBD5 /* Delegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Delegates.swift; sourceTree = "<group>"; };
 		375B74CBD15912C057778648 /* SongDownloadService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongDownloadService.swift; sourceTree = "<group>"; };
 		375B7572BED0154D72E9D709 /* SecurityService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityService.swift; sourceTree = "<group>"; };
@@ -140,7 +142,7 @@
 		375B7DDEF02EDD9BFB9D51D0 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		375B7E7F162B4D35F64106F9 /* song-413_48_16.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "song-413_48_16.json"; sourceTree = "<group>"; };
 		375B7E997E85862713C3E298 /* Installation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Installation.swift; sourceTree = "<group>"; };
-		375B7F10EF7E9D7B47F5BDD7 /* ArtworkServiceDelegateMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtworkServiceDelegateMock.swift; sourceTree = "<group>"; };
+		375B7F10EF7E9D7B47F5BDD7 /* ArtworkUsageCountProviderMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtworkUsageCountProviderMock.swift; sourceTree = "<group>"; };
 		5401BAD89B9B43540D25D060 /* Pods_PonyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PonyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4D845E27C8DACCAB30431C0 /* Pods-Pony.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pony.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pony/Pods-Pony.debug.xcconfig"; sourceTree = "<group>"; };
 		B3D39145FF6B4A31BF3EE82B /* ApiUrlDao.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiUrlDao.swift; sourceTree = "<group>"; };
@@ -314,11 +316,12 @@
 				B3D393A2E2DCE8BE452B5E53 /* TokenPairDaoMock.swift */,
 				375B7DD9654C7C15F8D507FF /* CacheProviderMock.swift */,
 				375B7A23F11D5F2C1F03083E /* ApiServiceMock.swift */,
-				375B7F10EF7E9D7B47F5BDD7 /* ArtworkServiceDelegateMock.swift */,
+				375B7F10EF7E9D7B47F5BDD7 /* ArtworkUsageCountProviderMock.swift */,
 				375B72FBFB720490C8AFBD54 /* SecurityServiceDelegateMock.swift */,
 				375B766623AD9D72EA8B368C /* BootstrapServiceDelegateMock.swift */,
 				375B7681DE6825FEF3FF7F43 /* MockBuilders.swift */,
 				375B71100DD260490B1B8DF9 /* SearchServiceMock.swift */,
+				375B748B6D40EF70C196223A /* SongDownloadServiceDelegateMock.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -721,7 +724,7 @@
 				B3D39211EF4DADC24777B152 /* EventBusSpec.swift in Sources */,
 				B3D3902E7893D46D205ACE20 /* ApiUrlDaoSpec.swift in Sources */,
 				B3D39FEDCBF2674FE4C8C219 /* TestUtils.swift in Sources */,
-				831CD2A51DF7092B00FE271C /* ArtworkServiceDelegateMock.swift in Sources */,
+				831CD2A51DF7092B00FE271C /* ArtworkUsageCountProviderMock.swift in Sources */,
 				B3D399282BC76FCFBFBC5810 /* TokenPairDaoSpec.swift in Sources */,
 				B3D3975309473B55FFA414F4 /* ApiUrlDaoMock.swift in Sources */,
 				B3D3961CE0B695418ECC9760 /* TokenPairDaoMock.swift in Sources */,
@@ -740,6 +743,7 @@
 				375B7C69AB13A580E61A9843 /* MockBuilders.swift in Sources */,
 				375B737ADEE08F7435329F29 /* SearchServiceMock.swift in Sources */,
 				375B7BEAF71CC6737CEF20E0 /* SongDownloadServiceSpec.swift in Sources */,
+				375B732BEDBB940A9450BF65 /* SongDownloadServiceDelegateMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

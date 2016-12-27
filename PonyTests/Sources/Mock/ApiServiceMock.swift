@@ -101,6 +101,7 @@ class ApiServiceMock: ApiService {
         return Observable.deferred {
             self.didCallDownloadSong = true
             if let songPath = self.songPath {
+                try! FileUtils.createDirectory(atPath: (toFile as NSString).deletingLastPathComponent)
                 try! FileManager.default.copyItem(atPath: songPath, toPath: toFile)
                 return Observable.of(0.3, 0.6, 1.0)
             } else {

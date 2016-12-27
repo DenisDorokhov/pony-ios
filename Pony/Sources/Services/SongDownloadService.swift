@@ -78,7 +78,7 @@ class SongDownloadService {
 
     func downloadSong(_ song: Song) -> SongDownloadService.Task {
         if let task = songToTask[song.id] {
-            Log.info("Song '\(song.id)' is already downloading.")
+            Log.warn("Song '\(song.id!)' is already downloading.")
             return task
         }
         
@@ -104,6 +104,7 @@ class SongDownloadService {
         _ = Observable.amb([download, expectCancellation]).subscribe(onError: { error in
             self.cleanTask(task)
             if case PonyError.cancelled = error {} else {
+                Log.error("Could not download song '\(song.id!)': \(error).")
                 self.delegates.fetch().forEach { $0.songDownloadService(self, didFailSongDownload: task.song, withError: error) }
             }
         }, onCompleted: {
@@ -111,7 +112,7 @@ class SongDownloadService {
             self.delegates.fetch().forEach { $0.songDownloadService(self, didCompleteSongDownload: task.song) }
         })
 
-        Log.info("Song '\(song.id)' download started.")
+        Log.info("Song '\(song.id!)' download started.")
         delegates.fetch().forEach { $0.songDownloadService(self, didStartSongDownload: task) }
         return task
     }
@@ -121,7 +122,7 @@ class SongDownloadService {
             cancellationSignal.onNext(song)
             forgetTask(task)
             delegates.fetch().forEach { $0.songDownloadService(self, didCancelSongDownload: task.song) }
-            Log.info("Download cancelled for song '\(task.song.id)'.")
+            Log.info("Download cancelled for song '\(task.song.id!)'.")
         } else {
             Log.warn("Could not cancel download of song '\(song)': download is not started.")
         }
@@ -136,11 +137,6 @@ class SongDownloadService {
     }
 
     func deleteSongDownload(_ song: Int64) -> Observable<Song> {
-        if let task = songToTask[song] {
-            Log.info("Song '\(song)' is currently downloading, cancelling song download.")
-            cancelSongDownload(song)
-            return Observable.just(task.song)
-        }
         return songService.delete(song: song).do(onNext: { song in
             self.deleteSongFile(song.id)
             if let artwork = song.album.artwork {

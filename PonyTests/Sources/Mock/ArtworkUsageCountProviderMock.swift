@@ -7,7 +7,7 @@ import RxSwift
 
 @testable import Pony
 
-class ArtworkServiceDelegateMock: ArtworkServiceDelegate {
+class ArtworkUsageCountProviderMock: ArtworkUsageCountProvider {
 
     var artworkToUsageCount: [Int64:Int] = [:]
 

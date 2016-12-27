@@ -20,7 +20,6 @@ class TokenPairDaoSpec: QuickSpec {
         describe("TokenPairDaoImpl") {
 
             var dao: TokenPairDaoImpl!
-
             beforeEach {
                 TestUtils.cleanAll()
                 dao = TokenPairDaoImpl()

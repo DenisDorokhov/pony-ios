@@ -10,7 +10,7 @@ protocol ArtworkService: class {
     func releaseOrRemove(artwork: Int64) -> Observable<Int>
 }
 
-protocol ArtworkServiceDelegate: class {
+protocol ArtworkUsageCountProvider: class {
     func getUsageCount(forArtwork: Int64) -> Observable<Int>
 }
 
@@ -41,7 +41,7 @@ class ArtworkServiceImpl: ArtworkService {
         }
     }
 
-    let delegate: ArtworkServiceDelegate
+    let artworkUsageCountProvider: ArtworkUsageCountProvider
     let apiService: ApiService
     let storageUrlProvider: StorageUrlProvider
 
@@ -50,8 +50,8 @@ class ArtworkServiceImpl: ArtworkService {
 
     private var fileOperationScheduler = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .default))
 
-    init(delegate: ArtworkServiceDelegate, apiService: ApiService, storageUrlProvider: StorageUrlProvider) {
-        self.delegate = delegate
+    init(artworkUsageCountProvider: ArtworkUsageCountProvider, apiService: ApiService, storageUrlProvider: StorageUrlProvider) {
+        self.artworkUsageCountProvider = artworkUsageCountProvider
         self.apiService = apiService
         self.storageUrlProvider = storageUrlProvider
     }
@@ -127,7 +127,7 @@ class ArtworkServiceImpl: ArtworkService {
                 return Observable.just(usageCount)
             } else {
                 Log.verbose("Checking usage count for artwork '\(artwork)'.")
-                return self.delegate.getUsageCount(forArtwork: artwork).do(onNext: {
+                return self.artworkUsageCountProvider.getUsageCount(forArtwork: artwork).do(onNext: {
                     Log.verbose("Usage count for artwork '\(artwork)': \($0).")
                     self.artworkToUsageCount[artwork] = $0
                 })
@@ -141,7 +141,9 @@ class ArtworkServiceImpl: ArtworkService {
         Log.debug("Incremented usage count of '\(artwork)': \(newUsageCount).")
         if newUsageCount == 1 {
             Log.debug("Downloading artwork '\(artwork)...'.")
-            return apiService.downloadImage(atUrl: url)
+            return apiService.downloadImage(atUrl: url).do(onError: {
+                        Log.error("Could not download artwork '\(artwork)': \($0).")
+                    })
                     .map { image -> (UIImage, URL) in
                         Log.info("Artwork '\(artwork)' has been downloaded.")
                         return (image, self.storageUrlProvider.fileUrl(forArtwork: artwork))

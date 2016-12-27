@@ -13,7 +13,91 @@ import RxBlocking
 class SongDownloadServiceSpec: QuickSpec {
     override func spec() {
         describe("SongDownloadServiceImpl") {
-            // TODO: implement
+
+            var songService: SongServiceImpl!
+            var delegate: SongDownloadServiceDelegateMock!
+            var service: SongDownloadService!
+            beforeEach {
+                TestUtils.cleanAll()
+
+                let bundle = Bundle(for: type(of: self))
+                
+                let apiServiceMock = ApiServiceMock()
+                apiServiceMock.imagePath = bundle.path(forResource: "artwork", ofType: "png")!
+                apiServiceMock.songPath = bundle.path(forResource: "song", ofType: "mp3")!
+                
+                let storageUrlProvider = StorageUrlProvider()
+                
+                songService = SongServiceImpl(context: SongServiceImpl.Context(), storageUrlProvider: storageUrlProvider, searchService: SearchServiceMock())
+                
+                let artworkService = ArtworkServiceImpl(artworkUsageCountProvider: songService, apiService: apiServiceMock, storageUrlProvider: storageUrlProvider)
+                
+                delegate = SongDownloadServiceDelegateMock()
+                service = SongDownloadService(apiService: apiServiceMock, artworkService: artworkService, songService: songService, storageUrlProvider: storageUrlProvider)
+                service.addDelegate(delegate)
+            }
+            afterEach {
+                TestUtils.cleanAll()
+            }
+
+            let songMock = MockBuilders.buildSongMock()
+            
+            it("should download song") {
+                
+                let task = service.downloadSong(songMock)
+                
+                expect(delegate.didStartSongDownload).toNot(beNil())
+                
+                var progress: [Double] = []
+                _ = task.asObservable().subscribe(onNext: {
+                            progress.append($0)
+                        })
+                
+                expect(service.taskForSong(songMock.id)).toNot(beNil())
+                expect(service.allTasks()).to(haveCount(1))
+                
+                expect(delegate.didCompleteSongDownload).toEventuallyNot(beNil())
+                expect(delegate.didProgressSongDownload).toNot(beNil())
+                expect(delegate.didCancelSongDownload).to(beNil())
+                expect(delegate.didFailSongDownload).to(beNil())
+                expect(delegate.didDeleteSongDownload).to(beNil())
+                
+                expect(progress.count).to(beGreaterThan(0))
+                expect(service.taskForSong(songMock.id)).to(beNil())
+                
+                let artists = try! songService.getArtists().toBlocking().first()!
+                
+                expect(artists).to(haveCount(1))
+            }
+            
+            it("should cancel song download") {
+                
+                _ = service.downloadSong(songMock)
+                
+                service.cancelSongDownload(songMock.id)
+                
+                _ = try! Observable.just().delay(1, scheduler: MainScheduler.instance).toBlocking().first()!
+
+                expect(delegate.didStartSongDownload).toNot(beNil())
+                expect(delegate.didProgressSongDownload).to(beNil())
+                expect(delegate.didCancelSongDownload).toNot(beNil())
+                expect(delegate.didFailSongDownload).to(beNil())
+                expect(delegate.didCompleteSongDownload).to(beNil())
+                expect(delegate.didDeleteSongDownload).to(beNil())
+            }
+            
+            it("should delete song") {
+
+                _ = service.downloadSong(songMock)
+
+                expect(delegate.didCompleteSongDownload).toEventuallyNot(beNil())
+                
+                _ = try! service.deleteSongDownload(songMock.id).toBlocking().first()!
+
+                let artists = try! songService.getArtists().toBlocking().first()!
+
+                expect(artists).to(beEmpty())
+            }
         }
     }
 }

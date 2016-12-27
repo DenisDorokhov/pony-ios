@@ -15,7 +15,7 @@ class ArtworkServiceSpec: QuickSpec {
         describe("ArtworkServiceImpl") {
 
             var apiServiceMock: ApiServiceMock!
-            var delegate: ArtworkServiceDelegateMock!
+            var delegate: ArtworkUsageCountProviderMock!
             var storageUrlProvider: StorageUrlProvider!
             var service: ArtworkServiceImpl!
             beforeEach {
@@ -26,13 +26,13 @@ class ArtworkServiceSpec: QuickSpec {
                 apiServiceMock = ApiServiceMock()
                 apiServiceMock.imagePath = bundle.path(forResource: "artwork", ofType: "png")!
 
-                delegate = ArtworkServiceDelegateMock()
+                delegate = ArtworkUsageCountProviderMock()
                 delegate.artworkToUsageCount[123] = 0
                 delegate.artworkToUsageCount[456] = 0
                 
                 storageUrlProvider = StorageUrlProvider()
 
-                service = ArtworkServiceImpl(delegate: delegate, apiService: apiServiceMock, storageUrlProvider: storageUrlProvider)
+                service = ArtworkServiceImpl(artworkUsageCountProvider: delegate, apiService: apiServiceMock, storageUrlProvider: storageUrlProvider)
             }
             afterEach {
                 TestUtils.cleanAll()

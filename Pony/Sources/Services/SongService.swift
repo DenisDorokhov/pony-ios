@@ -19,7 +19,7 @@ protocol SongService: class {
     func searchSongs(_ query: String) -> Observable<[Song]>
 }
 
-class SongServiceImpl: SongService, ArtworkServiceDelegate {
+class SongServiceImpl: SongService, ArtworkUsageCountProvider {
 
     class Context {
 
