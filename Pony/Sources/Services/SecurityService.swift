@@ -7,9 +7,9 @@ import RxSwift
 import OrderedSet
 
 protocol SecurityServiceDelegate: class {
-    func securityService(_ securityService: SecurityService, didAuthenticateUser user: User)
-    func securityService(_ securityService: SecurityService, didUpdateCurrentUser user: User)
-    func securityService(_ securityService: SecurityService, didLogoutUser user: User)
+    func securityService(_: SecurityService, didAuthenticateUser: User)
+    func securityService(_: SecurityService, didUpdateCurrentUser: User)
+    func securityService(_: SecurityService, didLogoutUser: User)
 }
 
 class SecurityService {
@@ -32,15 +32,15 @@ class SecurityService {
 
     private(set) var currentUser: User?
 
-    private var delegates: OrderedSet<NSValue> = []
+    private var delegates = Delegates<SecurityServiceDelegate>()
 
     private let queue = TaskPool(maxConcurrent: 1)
-    private var errorSignal: PublishSubject<Void> = PublishSubject()
+    private var cancellationSignal: PublishSubject<Void> = PublishSubject()
 
     private let disposeBag = DisposeBag()
 
     init(apiService: ApiService, tokenPairDao: TokenPairDao,
-         tokenExpirationCheckInterval: TimeInterval = 60, timeToRefreshTokenBeforeExpiration: TimeInterval = 60 * 60,
+         tokenExpirationCheckInterval: TimeInterval = 60, timeToRefreshTokenBeforeExpiration: TimeInterval = 7 * 24 * 60 * 60,
          updateAuthenticationPeriodically: Bool = true) {
 
         self.apiService = apiService
@@ -49,7 +49,7 @@ class SecurityService {
         self.updateAuthenticationPeriodically = updateAuthenticationPeriodically
 
         queue.addDisposableTo(disposeBag)
-        errorSignal.addDisposableTo(disposeBag)
+        cancellationSignal.addDisposableTo(disposeBag)
         
         Observable<Int>.timer(0, period: tokenExpirationCheckInterval, scheduler: MainScheduler.instance)
                 .flatMap { [weak self] (_) -> Observable<AuthenticationStatus> in
@@ -65,12 +65,12 @@ class SecurityService {
                 .subscribe().addDisposableTo(disposeBag)
     }
 
-    func addDelegate(delegate: SecurityServiceDelegate) {
-        delegates.append(NSValue(nonretainedObject: delegate))
+    func addDelegate(_ delegate: SecurityServiceDelegate) {
+        delegates.add(delegate)
     }
 
-    func removeDelegate(delegate: SecurityServiceDelegate) {
-        delegates.remove(NSValue(nonretainedObject: delegate))
+    func removeDelegate(_ delegate: SecurityServiceDelegate) {
+        delegates.remove(delegate)
     }
 
     func authenticate(credentials: Credentials) -> Observable<User> {
@@ -112,7 +112,7 @@ class SecurityService {
 
     func logout() -> Observable<User> {
         return Observable.deferred {
-            self.errorSignal.onNext()
+            self.cancellationSignal.onNext()
             if let user = self.currentUser {
                 Log.info("Logging out user '\(user.email ?? "")'...")
                 self.apiService.logout().do(onNext: { _ in
@@ -151,19 +151,15 @@ class SecurityService {
     }
 
     private func propagateAuthentication(user: User) {
-        self.fetchDelegates().forEach { $0.securityService(self, didAuthenticateUser: user) }
+        self.delegates.fetch().forEach { $0.securityService(self, didAuthenticateUser: user) }
     }
 
     private func propagateCurrentUserUpdate(user: User) {
-        self.fetchDelegates().forEach { $0.securityService(self, didUpdateCurrentUser: user) }
+        self.delegates.fetch().forEach { $0.securityService(self, didUpdateCurrentUser: user) }
     }
 
     private func propagateLogout(user: User) {
-        self.fetchDelegates().forEach { $0.securityService(self, didLogoutUser: user) }
-    }
-
-    private func fetchDelegates() -> [SecurityServiceDelegate] {
-        return delegates.map { $0.nonretainedObjectValue as! SecurityServiceDelegate }
+        self.delegates.fetch().forEach { $0.securityService(self, didLogoutUser: user) }
     }
 
     private func enqueue<T>(_ observable: @escaping () throws -> Observable<T>) -> Observable<T> {
@@ -172,7 +168,7 @@ class SecurityService {
                 try observable()
             })
         }
-        let expectCancellation = errorSignal.flatMap { (_) -> Observable<T> in
+        let expectCancellation = cancellationSignal.flatMap { (_) -> Observable<T> in
             throw PonyError.cancelled
         }
         return Observable.amb([enqueue, expectCancellation])

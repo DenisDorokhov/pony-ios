@@ -6,7 +6,20 @@
 import RxSwift
 import RealmSwift
 
-class SongService {
+protocol SongService: class {
+
+    func getArtists() -> Observable<[Artist]>
+    func getArtistAlbums(forArtist artist: Int64) -> Observable<ArtistAlbums>
+    
+    func save(song: Song) -> Observable<Song>
+    func delete(song: Int64) -> Observable<Song>
+
+    func searchArtists(_ query: String) -> Observable<[Artist]>
+    func searchAlbums(_ query: String) -> Observable<[Album]>
+    func searchSongs(_ query: String) -> Observable<[Song]>
+}
+
+class SongServiceImpl: SongService, ArtworkServiceDelegate {
 
     class Context {
 
@@ -115,12 +128,11 @@ class SongService {
                 var deletedSong: Song?, deletedAlbum: Int64?, deletedArtist: Int64?
                 if let songRealm = songRealm {
                     deletedSong = songRealm.toSong(artworkUrl: self.buildArtworkUrl, songUrl: self.buildSongUrl)
-                    var deletionResult: (deletedAlbum: Int64?, deletedArtist: Int64?)!
                     try realm.write {
-                        deletionResult = self.doDelete(song: songRealm, realm: realm)
+                        let deletionResult = self.doDelete(song: songRealm, realm: realm)
+                        deletedAlbum = deletionResult.deletedAlbum
+                        deletedArtist = deletionResult.deletedArtist
                     }
-                    deletedAlbum = deletionResult.deletedAlbum
-                    deletedArtist = deletionResult.deletedArtist
                 }
                 if let deletedSong = deletedSong {
                     Log.info("Song '\(song)' deleted.")
@@ -203,7 +215,21 @@ class SongService {
             }
         }.observeOn(MainScheduler.instance)
     }
-    
+
+    func getUsageCount(forArtwork artwork: Int64) -> Observable<Int> {
+        return Observable.just(artwork).observeOn(context.scheduler).map {
+            do {
+                let realm = try self.context.createRealm()
+                let albumsCount = realm.objects(AlbumRealm.self).filter("artwork == \($0)").count
+                let artistsCount = realm.objects(ArtistRealm.self).filter("artwork == \($0)").count
+                return albumsCount + artistsCount
+            } catch let error {
+                Log.error("Could not fetch artwork usage count: \(error).")
+                throw error
+            }
+        }.observeOn(MainScheduler.instance)
+    }
+
     private func buildSearchResultsQuery(_ results: [Int64]) -> String {
         let ids = results.map { String($0) }.joined(separator: ", ")
         return "id IN {\(ids)}"

@@ -12,12 +12,12 @@ import RxBlocking
 
 class ArtworkServiceSpec: QuickSpec {
     override func spec() {
-        describe("ArtworkService") {
+        describe("ArtworkServiceImpl") {
 
             var apiServiceMock: ApiServiceMock!
             var delegate: ArtworkServiceDelegateMock!
             var storageUrlProvider: StorageUrlProvider!
-            var service: ArtworkService!
+            var service: ArtworkServiceImpl!
             beforeEach {
                 TestUtils.cleanAll()
 
@@ -32,7 +32,7 @@ class ArtworkServiceSpec: QuickSpec {
                 
                 storageUrlProvider = StorageUrlProvider()
 
-                service = ArtworkService(delegate: delegate, apiService: apiServiceMock, storageUrlProvider: storageUrlProvider)
+                service = ArtworkServiceImpl(delegate: delegate, apiService: apiServiceMock, storageUrlProvider: storageUrlProvider)
             }
             afterEach {
                 TestUtils.cleanAll()

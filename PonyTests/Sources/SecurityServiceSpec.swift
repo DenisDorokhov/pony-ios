@@ -27,7 +27,7 @@ class SecurityServiceSpec: QuickSpec {
 
                 let user = User(id: 1, creationDate: Date(), name: "Foo Bar", email: "foo@bar.com", role: .user)
                 let authentication = Authentication(
-                        accessToken: "accessToken", accessTokenExpiration: Date() + 2.hour,
+                        accessToken: "accessToken", accessTokenExpiration: Date() + 8.days,
                         refreshToken: "refreshToken", refreshTokenExpiration: Date() + 1.day,
                         user: user)
 
@@ -42,7 +42,7 @@ class SecurityServiceSpec: QuickSpec {
                 service = SecurityService(apiService: apiServiceMock, tokenPairDao: tokenPairDaoMock, updateAuthenticationPeriodically: false)
                 
                 delegate = SecurityServiceDelegateMock()
-                service.addDelegate(delegate: delegate)
+                service.addDelegate(delegate)
             }
             afterEach {
                 TestUtils.cleanAll()

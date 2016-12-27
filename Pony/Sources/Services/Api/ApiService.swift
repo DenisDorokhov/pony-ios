@@ -161,10 +161,9 @@ class ApiServiceImpl: ApiService {
 
     func downloadSong(atUrl url: String, toFile filePath: String) -> Observable<Double> {
         return Observable.create { observer in
-            self.buildDisposable(self.sessionManager.download(url, method: .get,
-                    headers: self.buildAuthorizationHeaders(), to: {
+            self.buildDisposable(self.sessionManager.download(url, method: .get, headers: self.buildAuthorizationHeaders(), to: {
                 _, _ in
-                return (URL(fileURLWithPath: filePath), [.removePreviousFile])
+                return (URL(fileURLWithPath: filePath), [.removePreviousFile, .createIntermediateDirectories])
             }).downloadProgress {
                 observer.onNext($0.fractionCompleted)
             }.response {

@@ -28,7 +28,7 @@ class BootstrapServiceSpec: QuickSpec {
                 
                 userMock = User(id: 1, creationDate: Date(), name: "Foo Bar", email: "foo@bar.com", role: .user)
                 authenticationMock = Authentication(
-                        accessToken: "accessToken", accessTokenExpiration: Date() + 2.hour,
+                        accessToken: "accessToken", accessTokenExpiration: Date() + 8.days,
                         refreshToken: "refreshToken", refreshTokenExpiration: Date() + 1.day,
                         user: userMock)
 

@@ -13,14 +13,14 @@ import ObjectMapper
 
 class SongServiceSpec: QuickSpec {
     override func spec() {
-        describe("SongService") {
+        describe("SongServiceImpl") {
 
             var searchServiceMock: SearchServiceMock!
-            var service: SongService!
+            var service: SongServiceImpl!
             beforeEach {
                 TestUtils.cleanAll()
                 searchServiceMock = SearchServiceMock()
-                service = SongService(context: SongService.Context(), storageUrlProvider: StorageUrlProvider(), searchService: searchServiceMock)
+                service = SongServiceImpl(context: SongServiceImpl.Context(), storageUrlProvider: StorageUrlProvider(), searchService: searchServiceMock)
             }
             afterEach {
                 TestUtils.cleanAll()
@@ -84,6 +84,13 @@ class SongServiceSpec: QuickSpec {
                 searchServiceMock.searchSongs = [15]
                 let songs = try! service.searchSongs("carton").toBlocking().first()!
                 expect(songs).to(haveCount(1))
+            }
+            
+            it("should fetch artwork usage count") {
+                let songMock = MockBuilders.buildSongMock()
+                _ = try! service.save(song: songMock).toBlocking().first()!
+                let usageCount = try! service.getUsageCount(forArtwork: 3).toBlocking().first()!
+                expect(usageCount).to(equal(2))
             }
 
             it("should throw error when song not found") {

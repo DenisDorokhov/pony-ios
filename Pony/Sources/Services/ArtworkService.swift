@@ -5,43 +5,48 @@
 
 import RxSwift
 
-fileprivate class ArtworkDownloadQueue {
-
-    let artwork: Int64
-    
-    let queue = TaskPool(maxConcurrent: 1)
-
-    var referenceCount: Int = 0 {
-        didSet {
-            if referenceCount <= 0 {
-                queue.dispose()
-            }
-        }
-    }
-
-    private var disposable: Disposable?
-
-    init(_ artwork: Int64) {
-        self.artwork = artwork
-    }
-    
-    deinit {
-        queue.dispose()
-    }
+protocol ArtworkService: class {
+    func useOrDownload(artwork: Int64, url: String) -> Observable<Int>
+    func releaseOrRemove(artwork: Int64) -> Observable<Int>
 }
 
 protocol ArtworkServiceDelegate: class {
     func getUsageCount(forArtwork: Int64) -> Observable<Int>
 }
 
-class ArtworkService {
+class ArtworkServiceImpl: ArtworkService {
+
+    private class DownloadQueue {
+
+        let artwork: Int64
+
+        let queue = TaskPool(maxConcurrent: 1)
+
+        var referenceCount: Int = 0 {
+            didSet {
+                if referenceCount <= 0 {
+                    queue.dispose()
+                }
+            }
+        }
+
+        private var disposable: Disposable?
+
+        init(_ artwork: Int64) {
+            self.artwork = artwork
+        }
+
+        deinit {
+            queue.dispose()
+        }
+    }
 
     let delegate: ArtworkServiceDelegate
     let apiService: ApiService
     let storageUrlProvider: StorageUrlProvider
 
     private var artworkToUsageCount: [Int64: Int] = [:]
-    private var artworkToQueue: [Int64: ArtworkDownloadQueue] = [:]
+    private var artworkToQueue: [Int64: DownloadQueue] = [:]
 
     private var fileOperationScheduler = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .default))
 
@@ -83,7 +88,7 @@ class ArtworkService {
             return queue.queue
         } else {
             Log.verbose("Creating queue for artwork '\(artwork)'.")
-            let queue = ArtworkDownloadQueue(artwork)
+            let queue = DownloadQueue(artwork)
             queue.referenceCount = 1
             artworkToQueue[artwork] = queue
             return queue.queue
