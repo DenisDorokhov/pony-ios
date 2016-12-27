@@ -11,6 +11,7 @@ enum PonyError: Error, CustomStringConvertible {
     case offline
     case timeout
     case cancelled
+    case illegalState(message: String)
     case notFound
     case notAuthenticated
     case alreadyAuthenticated
@@ -49,6 +50,8 @@ enum PonyError: Error, CustomStringConvertible {
                 return "PonyError.timeout"
             case .cancelled:
                 return "PonyError.cancelled"
+            case .illegalState(let message):
+                return "PonyError.illegalState{message='\(message)'}"
             case .notFound:
                 return "PonyError.notFound"
             case .notAuthenticated:

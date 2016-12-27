@@ -23,23 +23,31 @@ class SongDownloadService {
         let song: Song
 
         var progress: Double {
-            return progressVariable.value
+            do {
+                return try progressSubject.value()
+            } catch {
+                return -1
+            }
+        }
+        
+        var isDisposed: Bool {
+            return progressSubject.isDisposed
         }
 
         var hashValue: Int {
             return song.id.hashValue
         }
 
-        fileprivate let progressVariable: Variable<Double>
+        fileprivate let progressSubject: BehaviorSubject<Double>
         fileprivate var downloadedArtworks: [Int64] = []
 
-        fileprivate init(song: Song, progressVariable: Variable<Double>) {
+        fileprivate init(song: Song, progressSubject: BehaviorSubject<Double>) {
             self.song = song
-            self.progressVariable = progressVariable
+            self.progressSubject = progressSubject
         }
 
         func asObservable() -> Observable<Double> {
-            return progressVariable.asObservable()
+            return progressSubject.asObservable()
         }
     }
 
@@ -52,6 +60,7 @@ class SongDownloadService {
     
     private var tasks: OrderedSet<SongDownloadService.Task> = []
     private var songToTask: [Int64: SongDownloadService.Task] = [:]
+    private var deletingSongs: Set<Int64> = []
     
     private let cancellationSignal: PublishSubject<Int64> = PublishSubject()
     
@@ -76,19 +85,21 @@ class SongDownloadService {
         delegates.remove(delegate)
     }
 
-    func downloadSong(_ song: Song) -> SongDownloadService.Task {
-        if let task = songToTask[song.id] {
-            Log.warn("Song '\(song.id!)' is already downloading.")
-            return task
+    func downloadSong(_ song: Song) -> Observable<Double> {
+        if let _ = songToTask[song.id] {
+            return Observable.error(PonyError.illegalState(message: "Song is already downloading."))
+        }
+        if deletingSongs.contains(song.id) {
+            return Observable.error(PonyError.illegalState(message: "Song is being deleted."))
         }
         
-        let task = Task(song: song, progressVariable: Variable(0))
+        let task = Task(song: song, progressSubject: BehaviorSubject(value: 0))
 
         tasks.append(task)
         songToTask[song.id] = task
         
         let download = apiService.downloadSong(atUrl: song.url, toFile: storageUrlProvider.fileUrl(forSong: song.id).path).do(onNext: {
-            task.progressVariable.value = $0
+            task.progressSubject.onNext($0)
             self.delegates.fetch().forEach { $0.songDownloadService(self, didProgressSongDownload: task) }
         }).takeLast(1).flatMap { (_) -> Observable<Int> in
             self.doUseOrDownloadAlbumArtwork(task)
@@ -107,14 +118,16 @@ class SongDownloadService {
                 Log.error("Could not download song '\(song.id!)': \(error).")
                 self.delegates.fetch().forEach { $0.songDownloadService(self, didFailSongDownload: task.song, withError: error) }
             }
+            task.progressSubject.onError(error)
         }, onCompleted: {
             self.forgetTask(task)
             self.delegates.fetch().forEach { $0.songDownloadService(self, didCompleteSongDownload: task.song) }
+            task.progressSubject.onCompleted()
         })
 
         Log.info("Song '\(song.id!)' download started.")
         delegates.fetch().forEach { $0.songDownloadService(self, didStartSongDownload: task) }
-        return task
+        return task.asObservable()
     }
 
     func cancelSongDownload(_ song: Int64) {
@@ -137,15 +150,25 @@ class SongDownloadService {
     }
 
     func deleteSongDownload(_ song: Int64) -> Observable<Song> {
-        return songService.delete(song: song).do(onNext: { song in
-            self.deleteSongFile(song.id)
+        if let _ = songToTask[song] {
+            return Observable.error(PonyError.illegalState(message: "Song is downloading."))
+        }
+        deletingSongs.insert(song)
+        return songService.delete(song: song).do(onNext: { _ in
+            self.deleteSongFile(song)
+        }).flatMap { (song) -> Observable<Song> in
+            var observables: [Observable<Int>] = []
             if let artwork = song.album.artwork {
-                _ = self.artworkService.releaseOrRemove(artwork: artwork).subscribe()
+                observables.append(self.artworkService.releaseOrRemove(artwork: artwork))
             }
             if let artwork = song.album.artist.artwork {
-                _ = self.artworkService.releaseOrRemove(artwork: artwork).subscribe()
+                observables.append(self.artworkService.releaseOrRemove(artwork: artwork))
             }
+            return Observable.from(observables).merge().map { _ in song }
+        }.do(onNext: { song in
             self.delegates.fetch().forEach { $0.songDownloadService(self, didDeleteSongDownload: song) }
+        }, onDispose: {
+            self.deletingSongs.remove(song)
         })
     }
     

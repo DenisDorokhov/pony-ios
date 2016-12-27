@@ -14,6 +14,7 @@ class SongDownloadServiceSpec: QuickSpec {
     override func spec() {
         describe("SongDownloadServiceImpl") {
 
+            var apiServiceMock: ApiServiceMock!
             var songService: SongServiceImpl!
             var delegate: SongDownloadServiceDelegateMock!
             var service: SongDownloadService!
@@ -22,7 +23,7 @@ class SongDownloadServiceSpec: QuickSpec {
 
                 let bundle = Bundle(for: type(of: self))
                 
-                let apiServiceMock = ApiServiceMock()
+                apiServiceMock = ApiServiceMock()
                 apiServiceMock.imagePath = bundle.path(forResource: "artwork", ofType: "png")!
                 apiServiceMock.songPath = bundle.path(forResource: "song", ofType: "mp3")!
                 
@@ -43,21 +44,12 @@ class SongDownloadServiceSpec: QuickSpec {
             let songMock = MockBuilders.buildSongMock()
             
             it("should download song") {
-                
-                let task = service.downloadSong(songMock)
+
+                let progress = try! service.downloadSong(songMock).toBlocking().toArray()
                 
                 expect(delegate.didStartSongDownload).toNot(beNil())
-                
-                var progress: [Double] = []
-                _ = task.asObservable().subscribe(onNext: {
-                            progress.append($0)
-                        })
-                
-                expect(service.taskForSong(songMock.id)).toNot(beNil())
-                expect(service.allTasks()).to(haveCount(1))
-                
-                expect(delegate.didCompleteSongDownload).toEventuallyNot(beNil())
                 expect(delegate.didProgressSongDownload).toNot(beNil())
+                expect(delegate.didCompleteSongDownload).toEventuallyNot(beNil())
                 expect(delegate.didCancelSongDownload).to(beNil())
                 expect(delegate.didFailSongDownload).to(beNil())
                 expect(delegate.didDeleteSongDownload).to(beNil())
@@ -70,9 +62,12 @@ class SongDownloadServiceSpec: QuickSpec {
                 expect(artists).to(haveCount(1))
             }
             
-            it("should cancel song download") {
+            it("should return tasks and cancel song download") {
                 
                 _ = service.downloadSong(songMock)
+
+                expect(service.taskForSong(songMock.id)).toNot(beNil())
+                expect(service.allTasks()).to(haveCount(1))
                 
                 service.cancelSongDownload(songMock.id)
                 
@@ -97,6 +92,48 @@ class SongDownloadServiceSpec: QuickSpec {
                 let artists = try! songService.getArtists().toBlocking().first()!
 
                 expect(artists).to(beEmpty())
+            }
+            
+            it("should throw when deleting currently downloading song") {
+
+                _ = service.downloadSong(songMock)
+                
+                expect { 
+                    try service.deleteSongDownload(songMock.id).toBlocking().toArray()
+                }.to(throwError())
+                
+                expect(delegate.didCompleteSongDownload).toEventuallyNot(beNil())
+            }
+            
+            it("should throw when downloading currently deleting song") {
+
+                _ = try! service.downloadSong(songMock).toBlocking().toArray()
+                var deleted = false
+                _ = service.deleteSongDownload(songMock.id).subscribe(onNext: { _ in
+                    deleted = true
+                })
+
+                expect {
+                    try service.downloadSong(songMock).toBlocking().toArray()
+                }.to(throwError())
+                
+                expect(deleted).toEventually(beTrue())
+            }
+            
+            it("should fail song download") {
+                
+                apiServiceMock.songPath = nil
+                
+                expect { 
+                    try service.downloadSong(songMock).toBlocking().toArray()
+                }.to(throwError())
+
+                expect(delegate.didStartSongDownload).toNot(beNil())
+                expect(delegate.didProgressSongDownload).to(beNil())
+                expect(delegate.didCompleteSongDownload).to(beNil())
+                expect(delegate.didCancelSongDownload).to(beNil())
+                expect(delegate.didFailSongDownload).toNot(beNil())
+                expect(delegate.didDeleteSongDownload).to(beNil())
             }
         }
     }
