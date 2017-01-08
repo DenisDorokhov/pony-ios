@@ -2,6 +2,4 @@ language: objective-c
 osx_image: xcode8.2
 script:
   - set -o pipefail
-  - xcodebuild -version
-  - xcodebuild -showsdks
   - xcodebuild -workspace Pony.xcworkspace -scheme Pony -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.1' test | xcpretty
