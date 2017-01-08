@@ -48,7 +48,7 @@ class ArtworkServiceImpl: ArtworkService {
     private var artworkToUsageCount: [Int64: Int] = [:]
     private var artworkToQueue: [Int64: DownloadQueue] = [:]
 
-    private var fileOperationScheduler = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .default))
+    private let fileOperationScheduler = ConcurrentDispatchQueueScheduler(queue: DispatchQueue.global(qos: .default))
 
     init(artworkUsageCountProvider: ArtworkUsageCountProvider, apiService: ApiService, storageUrlProvider: StorageUrlProvider) {
         self.artworkUsageCountProvider = artworkUsageCountProvider

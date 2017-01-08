@@ -64,7 +64,7 @@ class SongDownloadServiceSpec: QuickSpec {
             
             it("should return tasks and cancel song download") {
                 
-                _ = service.downloadSong(songMock)
+                _ = service.downloadSong(songMock).subscribe()
 
                 expect(service.taskForSong(songMock.id)).toNot(beNil())
                 expect(service.allTasks()).to(haveCount(1))
@@ -83,7 +83,7 @@ class SongDownloadServiceSpec: QuickSpec {
             
             it("should delete song") {
 
-                _ = service.downloadSong(songMock)
+                _ = service.downloadSong(songMock).subscribe()
 
                 expect(delegate.didCompleteSongDownload).toEventuallyNot(beNil())
                 
@@ -96,7 +96,7 @@ class SongDownloadServiceSpec: QuickSpec {
             
             it("should throw when deleting currently downloading song") {
 
-                _ = service.downloadSong(songMock)
+                _ = service.downloadSong(songMock).subscribe()
                 
                 expect { 
                     try service.deleteSongDownload(songMock.id).toBlocking().toArray()
