@@ -113,21 +113,24 @@ class SongDownloadService {
                 throw PonyError.cancelled
             }
 
-            _ = Observable.amb([download, expectCancellation]).subscribe(onNext: { song in
-                self.forgetTask(task)
-                self.delegates.fetch().forEach { $0.songDownloadService(self, didCompleteSongDownload: song) }
-                task.progressSubject.onCompleted()
-            }, onError: { error in
-                self.cleanTask(task)
-                if case PonyError.cancelled = error {} else {
-                    Log.error("Could not download song '\(song.id!)': \(error).")
-                    self.delegates.fetch().forEach { $0.songDownloadService(self, didFailSongDownload: task.song, withError: error) }
-                }
-                task.progressSubject.onError(error)
-            })
-
             Log.info("Song '\(song.id!)' download started.")
             self.delegates.fetch().forEach { $0.songDownloadService(self, didStartSongDownload: task) }
+
+            _ = Observable.amb([download, expectCancellation]).subscribe(onNext: { song in
+                self.forgetTask(task)
+                task.progressSubject.onCompleted()
+                self.delegates.fetch().forEach { $0.songDownloadService(self, didCompleteSongDownload: song) }
+            }, onError: { error in
+                self.cleanTask(task)
+                if case PonyError.cancelled = error {
+                    task.progressSubject.onError(error)
+                } else {
+                    Log.error("Could not download song '\(song.id!)': \(error).")
+                    task.progressSubject.onError(error)
+                    self.delegates.fetch().forEach { $0.songDownloadService(self, didFailSongDownload: task.song, withError: error) }
+                }
+            })
+
             return task.asObservable()
         }
     }
@@ -172,8 +175,9 @@ class SongDownloadService {
                 }.subscribe(onNext: { song in
                     self.deletingSongs.remove(song.id)
                     observer.onNext(song)
+                    observer.onCompleted()
                     self.delegates.fetch().forEach { $0.songDownloadService(self, didDeleteSongDownload: song) }
-                }, onError: observer.onError, onCompleted: observer.onCompleted)
+                }, onError: observer.onError)
             }
             return Disposables.create()
         }
