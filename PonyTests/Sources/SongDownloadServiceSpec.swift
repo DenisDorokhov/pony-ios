@@ -60,8 +60,11 @@ class SongDownloadServiceSpec: QuickSpec {
                 let artists = try songService.getArtists().toBlocking().first()
                 expect(artists).to(haveCount(1))
                 
-                if let songUrl = delegate.didCompleteSongDownload?.url {
-                    expect(FileManager.default.fileExists(atPath: URL(string: songUrl)!.path)).to(beTrue())
+                if let song = delegate.didCompleteSongDownload {
+                    let fileManager = FileManager.default
+                    expect(fileManager.fileExists(atPath: URL(string: song.url)!.path)).to(beTrue())
+                    expect(fileManager.fileExists(atPath: URL(string: song.album.artworkUrl!)!.path)).to(beTrue())
+                    expect(fileManager.fileExists(atPath: URL(string: song.album.artist.artworkUrl!)!.path)).to(beTrue())
                 }
             }
             
@@ -92,8 +95,11 @@ class SongDownloadServiceSpec: QuickSpec {
                 
                 let deletedSong = try service.deleteSongDownload(songMock.id).toBlocking().first()
                 expect(deletedSong).toNot(beNil())
-                if let songUrl = deletedSong?.url {
-                    expect(FileManager.default.fileExists(atPath: URL(string: songUrl)!.path)).to(beFalse())
+                if let song = deletedSong {
+                    let fileManager = FileManager.default
+                    expect(fileManager.fileExists(atPath: URL(string: song.url)!.path)).to(beFalse())
+                    expect(fileManager.fileExists(atPath: URL(string: song.album.artworkUrl!)!.path)).to(beFalse())
+                    expect(fileManager.fileExists(atPath: URL(string: song.album.artist.artworkUrl!)!.path)).to(beFalse())
                 }
 
                 let artists = try songService.getArtists().toBlocking().first()

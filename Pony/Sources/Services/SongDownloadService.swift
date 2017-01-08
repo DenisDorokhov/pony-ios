@@ -168,7 +168,7 @@ class SongDownloadService {
                     if let artwork = song.album.artist.artwork {
                         observables.append(self.artworkService.releaseOrRemove(artwork: artwork))
                     }
-                    return Observable.from(observables).merge().map { _ in song }
+                    return Observable.from(observables).merge().toArray().map { _ in song }
                 }.subscribe(onNext: { song in
                     self.deletingSongs.remove(song.id)
                     observer.onNext(song)
