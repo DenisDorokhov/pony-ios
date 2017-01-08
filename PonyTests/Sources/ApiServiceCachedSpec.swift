@@ -12,7 +12,7 @@ import RxBlocking
 
 class ApiServiceCachedSpec: QuickSpec {
     override func spec() {
-        describe("ApiServiceCached") {
+        TestUtils.describe("ApiServiceCached") {
 
             var apiServiceMock: ApiServiceMock!
             var service: ApiServiceCached!
@@ -31,14 +31,18 @@ class ApiServiceCachedSpec: QuickSpec {
                 TestUtils.cleanAll()
             }
 
-            it("should cache image") {
+            TestUtils.it("should cache image") {
+                
+                var image: UIImage?
 
-                _ = try! service.downloadImage(atUrl: "someUrl").toBlocking().first()!
+                image = try service.downloadImage(atUrl: "someUrl").toBlocking().first()
+                expect(image).toNot(beNil())
                 expect(apiServiceMock.didCallDownloadImage).to(beTrue())
 
                 apiServiceMock.didCallDownloadImage = false
                 
-                _ = try! service.downloadImage(atUrl: "someUrl").toBlocking().first()!
+                image = try service.downloadImage(atUrl: "someUrl").toBlocking().first()
+                expect(image).toNot(beNil())
                 expect(apiServiceMock.didCallDownloadImage).to(beFalse())
             }
         }

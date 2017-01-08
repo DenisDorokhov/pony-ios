@@ -11,7 +11,7 @@ import Nimble
 class EventBusSpec: QuickSpec {
 
     override func spec() {
-        describe("EventBus") {
+        TestUtils.describe("EventBus") {
             
             var eventBus: EventBus!
             
@@ -19,7 +19,7 @@ class EventBusSpec: QuickSpec {
                 eventBus = EventBus()
             }
             
-            it("should listen to subscribed events") {
+            TestUtils.it("should listen to subscribed events") {
                 
                 var firedEvent: PayloadEvent<Int>?
                 _ = eventBus.listen("test") { (event: PayloadEvent<Int>) in
@@ -31,7 +31,7 @@ class EventBusSpec: QuickSpec {
                 expect(firedEvent?.payload).to(equal(123))
             }
             
-            it("should not listen to not subscribed events") {
+            TestUtils.it("should not listen to not subscribed events") {
                 
                 var called = false
                 _ = eventBus.listen("test") { _ in
@@ -42,7 +42,7 @@ class EventBusSpec: QuickSpec {
                 expect(called).to(beTrue())
             }
             
-            it("should unsubscribe") {
+            TestUtils.it("should unsubscribe") {
                 
                 var called = false
                 let handle = eventBus.listen("test") { _ in

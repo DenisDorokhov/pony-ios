@@ -13,7 +13,7 @@ import SwiftDate
 
 class SecurityServiceSpec: QuickSpec {
     override func spec() {
-        describe("SecurityService") {
+        TestUtils.describe("SecurityService") {
 
             var credentials: Credentials!
             var apiServiceMock: ApiServiceMock!
@@ -48,9 +48,9 @@ class SecurityServiceSpec: QuickSpec {
                 TestUtils.cleanAll()
             }
 
-            it("should authenticate") {
+            TestUtils.it("should authenticate") {
                 
-                let user = try! service.authenticate(credentials: credentials).toBlocking().first()
+                let user = try service.authenticate(credentials: credentials).toBlocking().first()
                 expect(user).notTo(beNil())
                 expect(service.isAuthenticated).to(beTrue())
                 
@@ -63,12 +63,12 @@ class SecurityServiceSpec: QuickSpec {
                 expect(delegate.didLogoutUser).to(beNil())
             }
 
-            it("should update status after authentication") {
+            TestUtils.it("should update status after authentication") {
                 
-                _ = try! service.authenticate(credentials: credentials).toBlocking().first()
-                let status = try! service.updateAuthenticationStatus().toBlocking().first()!
+                _ = try service.authenticate(credentials: credentials).toBlocking().first()
+                let status = try service.updateAuthenticationStatus().toBlocking().first()
                 switch status {
-                case .authenticated(_):
+                case .authenticated(_)?:
                     expect(apiServiceMock.didCallGetCurrentUser).to(beTrue())
                     expect(apiServiceMock.didCallRefreshToken).to(beFalse())
                 default:
@@ -80,12 +80,12 @@ class SecurityServiceSpec: QuickSpec {
                 expect(delegate.didLogoutUser).to(beNil())
             }
 
-            it("should update status without authentication") {
+            TestUtils.it("should update status without authentication") {
                 
-                let status = try! service.updateAuthenticationStatus().toBlocking().first()!
+                let status = try service.updateAuthenticationStatus().toBlocking().first()
                 expect(service.isAuthenticated).to(beTrue())
                 switch status {
-                case .authenticated(_):
+                case .authenticated(_)?:
                     expect(apiServiceMock.didCallGetCurrentUser).to(beTrue())
                     expect(apiServiceMock.didCallRefreshToken).to(beFalse())
                 default:
@@ -97,15 +97,15 @@ class SecurityServiceSpec: QuickSpec {
                 expect(delegate.didLogoutUser).to(beNil())
             }
 
-            it("should refresh token when updating status") {
+            TestUtils.it("should refresh token when updating status") {
 
                 let tokenPair = TokenPair(accessToken: "accessToken", accessTokenExpiration: Date(),
                         refreshToken: "refreshToken", refreshTokenExpiration: Date() + 1.day)
                 tokenPairDaoMock.store(tokenPair: tokenPair)
 
-                let status = try! service.updateAuthenticationStatus().toBlocking().first()!
+                let status = try service.updateAuthenticationStatus().toBlocking().first()
                 switch status {
-                case .authenticated(_):
+                case .authenticated(_)?:
                     expect(apiServiceMock.didCallGetCurrentUser).to(beFalse())
                     expect(apiServiceMock.didCallRefreshToken).to(beTrue())
                 default:
@@ -117,7 +117,7 @@ class SecurityServiceSpec: QuickSpec {
                 expect(delegate.didLogoutUser).to(beNil())
             }
 
-            it("should avoid race conditions when authenticating and updating status") {
+            TestUtils.it("should avoid race conditions when authenticating and updating status") {
                 
                 apiServiceMock.authenticateDelay = 0.3
                 apiServiceMock.getCurrentUserDelay = 0.1
@@ -133,10 +133,10 @@ class SecurityServiceSpec: QuickSpec {
                 expect(order.last).toEventually(equal(2))
             }
             
-            it("should logout") {
+            TestUtils.it("should logout") {
                 
-                _ = try! service.updateAuthenticationStatus().toBlocking().first()!
-                let user = try! service.logout().toBlocking().first()
+                _ = try service.updateAuthenticationStatus().toBlocking().first()
+                let user = try service.logout().toBlocking().first()
                 expect(user).notTo(beNil())
                 expect(service.isAuthenticated).to(beFalse())
 
@@ -147,7 +147,7 @@ class SecurityServiceSpec: QuickSpec {
                 expect(delegate.didLogoutUser).toNot(beNil())
             }
             
-            it("should cancel authentication and status requests when logging out") {
+            TestUtils.it("should cancel authentication and status requests when logging out") {
                 var errorRequests = 0
                 _ = service.updateAuthenticationStatus().subscribe(onError: { _ in
                             errorRequests += 1
@@ -159,14 +159,14 @@ class SecurityServiceSpec: QuickSpec {
                 expect(errorRequests).toEventually(equal(2))
             }
             
-            it("should throw error when authenticating already authenticated user") {
-                _ = try! service.authenticate(credentials: credentials).toBlocking().first()
+            TestUtils.it("should throw error when authenticating already authenticated user") {
+                _ = try service.authenticate(credentials: credentials).toBlocking().first()
                 expect { 
                     _ = try service.authenticate(credentials: credentials).toBlocking().first() 
                 }.to(throwError(PonyError.alreadyAuthenticated))
             }
             
-            it("should throw error when logging out not authenticated user") {
+            TestUtils.it("should throw error when logging out not authenticated user") {
                 expect { 
                     _ = try service.logout().toBlocking().first() 
                 }.to(throwError(PonyError.notAuthenticated))

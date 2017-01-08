@@ -12,7 +12,7 @@ import RxBlocking
 
 class SongDownloadServiceSpec: QuickSpec {
     override func spec() {
-        describe("SongDownloadServiceImpl") {
+        TestUtils.describe("SongDownloadServiceImpl") {
 
             var apiServiceMock: ApiServiceMock!
             var songService: SongServiceImpl!
@@ -43,9 +43,9 @@ class SongDownloadServiceSpec: QuickSpec {
 
             let songMock = MockBuilders.buildSongMock()
             
-            it("should download song") {
+            TestUtils.it("should download song") {
 
-                let progress = try! service.downloadSong(songMock).toBlocking().toArray()
+                let progress = try service.downloadSong(songMock).toBlocking().toArray()
                 
                 expect(delegate.didStartSongDownload).toNot(beNil())
                 expect(delegate.didProgressSongDownload).toNot(beNil())
@@ -57,12 +57,11 @@ class SongDownloadServiceSpec: QuickSpec {
                 expect(progress.count).to(beGreaterThan(0))
                 expect(service.taskForSong(songMock.id)).to(beNil())
                 
-                let artists = try! songService.getArtists().toBlocking().first()!
-                
+                let artists = try songService.getArtists().toBlocking().first()
                 expect(artists).to(haveCount(1))
             }
             
-            it("should return tasks and cancel song download") {
+            TestUtils.it("should return tasks and cancel song download") {
                 
                 _ = service.downloadSong(songMock).subscribe()
 
@@ -71,7 +70,7 @@ class SongDownloadServiceSpec: QuickSpec {
                 
                 service.cancelSongDownload(songMock.id)
                 
-                _ = try! Observable.just().delay(1, scheduler: MainScheduler.instance).toBlocking().first()!
+                _ = try Observable.just().delay(1, scheduler: MainScheduler.instance).toBlocking().first()
 
                 expect(delegate.didStartSongDownload).toNot(beNil())
                 expect(delegate.didProgressSongDownload).to(beNil())
@@ -81,20 +80,20 @@ class SongDownloadServiceSpec: QuickSpec {
                 expect(delegate.didDeleteSongDownload).to(beNil())
             }
             
-            it("should delete song") {
+            TestUtils.it("should delete song") {
 
                 _ = service.downloadSong(songMock).subscribe()
 
                 expect(delegate.didCompleteSongDownload).toEventuallyNot(beNil())
                 
-                _ = try! service.deleteSongDownload(songMock.id).toBlocking().first()!
+                let deletedSong = try service.deleteSongDownload(songMock.id).toBlocking().first()
+                expect(deletedSong).toNot(beNil())
 
-                let artists = try! songService.getArtists().toBlocking().first()!
-
+                let artists = try songService.getArtists().toBlocking().first()
                 expect(artists).to(beEmpty())
             }
             
-            it("should throw when deleting currently downloading song") {
+            TestUtils.it("should throw when deleting currently downloading song") {
 
                 _ = service.downloadSong(songMock).subscribe()
                 
@@ -105,9 +104,9 @@ class SongDownloadServiceSpec: QuickSpec {
                 expect(delegate.didCompleteSongDownload).toEventuallyNot(beNil())
             }
             
-            it("should throw when downloading currently deleting song") {
+            TestUtils.it("should throw when downloading currently deleting song") {
 
-                _ = try! service.downloadSong(songMock).toBlocking().toArray()
+                _ = try service.downloadSong(songMock).toBlocking().toArray()
                 var deleted = false
                 _ = service.deleteSongDownload(songMock.id).subscribe(onNext: { _ in
                     deleted = true
@@ -120,7 +119,7 @@ class SongDownloadServiceSpec: QuickSpec {
                 expect(deleted).toEventually(beTrue())
             }
             
-            it("should fail song download") {
+            TestUtils.it("should fail song download") {
                 
                 apiServiceMock.songPath = nil
                 

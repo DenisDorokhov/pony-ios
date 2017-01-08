@@ -12,7 +12,7 @@ import RxBlocking
 
 class ApiServiceQueuedSpec: QuickSpec {
     override func spec() {
-        describe("ApiServiceQueued") {
+        TestUtils.describe("ApiServiceQueued") {
 
             var apiServiceMock: ApiServiceMock!
             var service: ApiServiceQueued!
@@ -31,7 +31,7 @@ class ApiServiceQueuedSpec: QuickSpec {
                 TestUtils.cleanAll()
             }
 
-            it("should respect max concurrent image requests") {
+            TestUtils.it("should respect max concurrent image requests") {
                 var observables: [Observable<UIImage>] = []
                 for _ in 1 ... 20 {
                     observables.append(service.downloadImage(atUrl: "someUrl"))
@@ -40,11 +40,11 @@ class ApiServiceQueuedSpec: QuickSpec {
                     Log.debug("Number of running image requests: \($0).")
                     expect($0).to(beLessThanOrEqualTo(service.maxConcurrentImageRequests))
                 })
-                let images = try! Observable.from(observables).merge().toBlocking().toArray()
+                let images = try Observable.from(observables).merge().toBlocking().toArray()
                 expect(images).to(haveCount(observables.count))
             }
 
-            it("should respect max concurrent song requests") {
+            TestUtils.it("should respect max concurrent song requests") {
                 var observables: [Observable<Double>] = []
                 var filePaths: [String] = []
                 for _ in 1 ... 10 {
@@ -56,7 +56,7 @@ class ApiServiceQueuedSpec: QuickSpec {
                     Log.debug("Number of running song requests: \($0).")
                     expect($0).to(beLessThanOrEqualTo(service.maxConcurrentSongRequests))
                 })
-                _ = try! Observable.from(observables).merge().toBlocking().toArray()
+                _ = try Observable.from(observables).merge().toBlocking().toArray()
                 for filePath in filePaths {
                     expect(FileManager.default.fileExists(atPath: filePath)).to(beTrue())
                 }

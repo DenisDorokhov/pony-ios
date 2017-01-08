@@ -13,7 +13,7 @@ import SwiftDate
 
 class BootstrapServiceSpec: QuickSpec {
     override func spec() {
-        describe("BootstrapService") {
+        TestUtils.describe("BootstrapService") {
 
             var apiUrlDaoMock: ApiUrlDaoMock!
             var tokenPairDaoMock: TokenPairDaoMock!
@@ -50,7 +50,7 @@ class BootstrapServiceSpec: QuickSpec {
                 TestUtils.cleanAll()
             }
 
-            it("should start bootstrap and require api url") {
+            TestUtils.it("should start bootstrap and require api url") {
                 
                 service.bootstrap(delegate: delegate)
                 
@@ -62,7 +62,7 @@ class BootstrapServiceSpec: QuickSpec {
                 expect(delegate.didFailWithError).to(beNil())
             }
 
-            it("should start background activity and require authentication") {
+            TestUtils.it("should start background activity and require authentication") {
                 
                 apiUrlDaoMock.store(url: URL(string: "http://someUrl")!)
                 service.bootstrap(delegate: delegate)
@@ -75,7 +75,7 @@ class BootstrapServiceSpec: QuickSpec {
                 expect(delegate.didFailWithError).to(beNil())
             }
 
-            it("should finish bootstrap") {
+            TestUtils.it("should finish bootstrap") {
                 
                 apiUrlDaoMock.store(url: URL(string: "http://someUrl")!)
                 tokenPairDaoMock.store(tokenPair: TokenPair(authentication: authenticationMock))
@@ -89,7 +89,7 @@ class BootstrapServiceSpec: QuickSpec {
                 expect(delegate.didFailWithError).to(beNil())
             }
 
-            it("should fail on error") {
+            TestUtils.it("should fail on error") {
                 
                 apiUrlDaoMock.store(url: URL(string: "http://someUrl")!)
                 tokenPairDaoMock.store(tokenPair: TokenPair(authentication: authenticationMock))
@@ -104,11 +104,11 @@ class BootstrapServiceSpec: QuickSpec {
                 expect(delegate.didFailWithError).toNot(beNil())
             }
 
-            it("should clear bootstrap data") {
+            TestUtils.it("should clear bootstrap data") {
                 
                 apiUrlDaoMock.store(url: URL(string: "http://someUrl")!)
                 tokenPairDaoMock.store(tokenPair: TokenPair(authentication: authenticationMock))
-                _ = try! securityService.updateAuthenticationStatus().toBlocking().first()
+                _ = try securityService.updateAuthenticationStatus().toBlocking().first()
                 
                 expect(securityService.isAuthenticated).to(beTrue())
                 

@@ -5,6 +5,8 @@
 
 import Foundation
 import KeychainSwift
+import Quick
+import Nimble
 
 @testable import Pony
 
@@ -38,5 +40,27 @@ class TestUtils {
 
     static func cleanKeychain() {
         KeychainSwift().clear()
+    }
+    
+    static func describe(_ description: String, flags: FilterFlags = [:], closure: @escaping () throws -> ()) {
+        let notThrowingClosure = {
+            do {
+                try closure()
+            } catch let error {
+                fail("Exception thrown: \(error).")
+            }
+        }
+        Quick.describe(description, closure: notThrowingClosure)
+    }
+    
+    static func it(_ description: String, flags: FilterFlags = [:], file: String = #file, line: UInt = #line, closure: @escaping () throws -> ()) {
+        let notThrowingClosure = {
+            do {
+                try closure()
+            } catch let error {
+                fail("Exception thrown: \(error).")
+            }
+        }
+        Quick.it(description, flags: flags, file: file, line: line, closure: notThrowingClosure)
     }
 }

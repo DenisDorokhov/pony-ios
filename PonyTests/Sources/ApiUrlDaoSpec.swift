@@ -10,7 +10,7 @@ import Nimble
 
 class ApiUrlDaoSpec: QuickSpec {
     override func spec() {
-        describe("ApiUrlDao") {
+        TestUtils.describe("ApiUrlDao") {
 
             var dao: ApiUrlDaoImpl!
 
@@ -22,21 +22,20 @@ class ApiUrlDaoSpec: QuickSpec {
                 TestUtils.cleanAll()
             }
 
-            it("should be empty after cleaning") {
+            TestUtils.it("should be empty after cleaning") {
                 expect(dao.fetchUrl()).to(beNil())
             }
 
-            it("should store and fetch URL") {
+            TestUtils.it("should store and fetch URL") {
 
                 dao.store(url: URL(string: "http://google.com")!)
 
                 let url = dao.fetchUrl()
 
-                expect(url).toNot(beNil())
-                expect(url!.absoluteString).to(equal("http://google.com"))
+                expect(url?.absoluteString).to(equal("http://google.com"))
             }
 
-            it("should remove token pair") {
+            TestUtils.it("should remove token pair") {
                 dao.store(url: URL(string: "http://google.com")!)
                 dao.removeUrl()
                 expect(dao.fetchUrl()).to(beNil())
