@@ -2,7 +2,7 @@ language: objective-c
 osx_image: xcode8
 script:
   - set -o pipefail
-  - xcodebuild 
+  - travis_retry xcodebuild 
     -workspace Pony.xcworkspace 
     -scheme Pony 
     -destination 'platform=iOS Simulator,name=iPhone 5s,OS=10.0' 

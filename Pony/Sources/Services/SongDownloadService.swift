@@ -113,17 +113,17 @@ class SongDownloadService {
                 throw PonyError.cancelled
             }
 
-            _ = Observable.amb([download, expectCancellation]).subscribe(onError: { error in
+            _ = Observable.amb([download, expectCancellation]).subscribe(onNext: { song in
+                self.forgetTask(task)
+                self.delegates.fetch().forEach { $0.songDownloadService(self, didCompleteSongDownload: song) }
+                task.progressSubject.onCompleted()
+            }, onError: { error in
                 self.cleanTask(task)
                 if case PonyError.cancelled = error {} else {
                     Log.error("Could not download song '\(song.id!)': \(error).")
                     self.delegates.fetch().forEach { $0.songDownloadService(self, didFailSongDownload: task.song, withError: error) }
                 }
                 task.progressSubject.onError(error)
-            }, onCompleted: {
-                self.forgetTask(task)
-                self.delegates.fetch().forEach { $0.songDownloadService(self, didCompleteSongDownload: task.song) }
-                task.progressSubject.onCompleted()
             })
 
             Log.info("Song '\(song.id!)' download started.")

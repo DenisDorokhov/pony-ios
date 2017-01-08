@@ -59,6 +59,10 @@ class SongDownloadServiceSpec: QuickSpec {
                 
                 let artists = try songService.getArtists().toBlocking().first()
                 expect(artists).to(haveCount(1))
+                
+                if let songUrl = delegate.didCompleteSongDownload?.url {
+                    expect(FileManager.default.fileExists(atPath: URL(string: songUrl)!.path)).to(beTrue())
+                }
             }
             
             TestUtils.it("should return tasks and cancel song download") {
@@ -88,6 +92,9 @@ class SongDownloadServiceSpec: QuickSpec {
                 
                 let deletedSong = try service.deleteSongDownload(songMock.id).toBlocking().first()
                 expect(deletedSong).toNot(beNil())
+                if let songUrl = deletedSong?.url {
+                    expect(FileManager.default.fileExists(atPath: URL(string: songUrl)!.path)).to(beFalse())
+                }
 
                 let artists = try songService.getArtists().toBlocking().first()
                 expect(artists).to(beEmpty())
