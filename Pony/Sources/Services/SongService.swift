@@ -47,6 +47,8 @@ class SongServiceImpl: SongService, ArtworkUsageCountProvider {
     let context: Context
     let storageUrlProvider: StorageUrlProvider
     let searchService: SearchService
+    
+    var searchLimit = 10
 
     init(context: Context, storageUrlProvider: StorageUrlProvider, searchService: SearchService) {
         self.context = context
@@ -164,7 +166,7 @@ class SongServiceImpl: SongService, ArtworkUsageCountProvider {
 
     func searchArtists(_ query: String) -> Observable<[Artist]> {
         return Observable.just(query).observeOn(context.scheduler).map {
-            try self.searchService.searchArtists($0)
+            try self.searchService.searchArtists($0, limit: self.searchLimit)
         }.map {
             do {
                 let realm = try self.context.createRealm()
@@ -182,7 +184,7 @@ class SongServiceImpl: SongService, ArtworkUsageCountProvider {
 
     func searchAlbums(_ query: String) -> Observable<[Album]> {
         return Observable.just(query).observeOn(context.scheduler).map {
-            try self.searchService.searchAlbums($0)
+            try self.searchService.searchAlbums($0, limit: self.searchLimit)
         }.map {
             do {
                 let realm = try self.context.createRealm()
@@ -200,7 +202,7 @@ class SongServiceImpl: SongService, ArtworkUsageCountProvider {
 
     func searchSongs(_ query: String) -> Observable<[Song]> {
         return Observable.just(query).observeOn(context.scheduler).map {
-            try self.searchService.searchSongs($0)
+            try self.searchService.searchSongs($0, limit: self.searchLimit)
         }.map {
             do {
                 let realm = try self.context.createRealm()

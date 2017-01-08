@@ -55,31 +55,34 @@ class SearchServiceMock: SearchService {
         didCallClearIndex = true
     }
 
-    func searchArtists(_ query: String) throws -> [Int64] {
+    func searchArtists(_ query: String, limit: Int) throws -> [Int64] {
         didCallSearchArtists = query
         if let value = searchArtists {
-            return value
+            return limitArray(value, limit)
         } else {
             throw PonyError.unexpected
         }
     }
 
-    func searchAlbums(_ query: String) throws -> [Int64] {
+    func searchAlbums(_ query: String, limit: Int) throws -> [Int64] {
         didCallSearchAlbums = query
         if let value = searchAlbums {
-            return value
+            return limitArray(value, limit)
         } else {
             throw PonyError.unexpected
         }
     }
 
-    func searchSongs(_ query: String) throws -> [Int64] {
+    func searchSongs(_ query: String, limit: Int) throws -> [Int64] {
         didCallSearchSongs = query
         if let value = searchSongs {
-            return value
+            return limitArray(value, limit)
         } else {
             throw PonyError.unexpected
         }
     }
 
+    private func limitArray(_ array: [Int64], _ limit: Int) -> [Int64] {
+        return Array(array[0..<min(limit, array.count)])
+    }
 }

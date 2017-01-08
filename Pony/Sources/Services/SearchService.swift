@@ -18,9 +18,9 @@ protocol SearchService: class {
 
     func clearIndex() throws
 
-    func searchArtists(_: String) throws -> [Int64]
-    func searchAlbums(_: String) throws -> [Int64]
-    func searchSongs(_: String) throws -> [Int64]
+    func searchArtists(_: String, limit: Int) throws -> [Int64]
+    func searchAlbums(_: String, limit: Int) throws -> [Int64]
+    func searchSongs(_: String, limit: Int) throws -> [Int64]
 }
 
 class SearchServiceImpl: SearchService {
@@ -115,19 +115,19 @@ class SearchServiceImpl: SearchService {
         _ = try context.db.run(context.songsTable.delete())
     }
 
-    func searchArtists(_ query: String) throws -> [Int64] {
+    func searchArtists(_ query: String, limit: Int) throws -> [Int64] {
         let context = try createContextIfNeeded()
-        return try runQuery(query, "artists", context.artistsTable, context)
+        return try runQuery(query, "artists", context.artistsTable, context, limit)
     }
 
-    func searchAlbums(_ query: String) throws -> [Int64] {
+    func searchAlbums(_ query: String, limit: Int) throws -> [Int64] {
         let context = try createContextIfNeeded()
-        return try runQuery(query, "albums", context.albumsTable, context)
+        return try runQuery(query, "albums", context.albumsTable, context, limit)
     }
 
-    func searchSongs(_ query: String) throws -> [Int64] {
+    func searchSongs(_ query: String, limit: Int) throws -> [Int64] {
         let context = try createContextIfNeeded()
-        return try runQuery(query, "songs", context.songsTable, context)
+        return try runQuery(query, "songs", context.songsTable, context, limit)
     }
     
     private func buildQuery(_ query: String) -> String {
@@ -138,13 +138,13 @@ class SearchServiceImpl: SearchService {
         }
     }
     
-    private func runQuery(_ query: String, _ tableName: String, _ table: VirtualTable, _ context: Context) throws -> [Int64] {
+    private func runQuery(_ query: String, _ tableName: String, _ table: VirtualTable, _ context: Context, _ limit: Int) throws -> [Int64] {
         
         let matchQuery = buildQuery(query)
         Log.verbose("Running search query '\(matchQuery)' on '\(tableName)'.")
         
         let selectQuery = table.select(context.docIdColumn)
-                .filter(context.termsColumn.match(matchQuery))
+                .filter(context.termsColumn.match(matchQuery)).limit(limit)
         return try context.db.prepare(selectQuery).map { $0[context.docIdColumn] }
     }
 

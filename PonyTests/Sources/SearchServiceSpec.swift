@@ -53,7 +53,7 @@ class SearchServiceSpec: QuickSpec {
                 try! service.createIndex(forArtist: songMock15_3_3.album.artist)
                 try! service.createIndex(forArtist: songMock413_48_16.album.artist)
 
-                let artists = try! service.searchArtists("James Quintet")
+                let artists = try! service.searchArtists("James Quintet", limit: 10)
                 expect(artists).to(haveCount(1))
                 expect(artists.first).to(equal(16))
             }
@@ -64,7 +64,7 @@ class SearchServiceSpec: QuickSpec {
                 try! service.createIndex(forAlbum: songMock17_4_3.album)
                 try! service.createIndex(forAlbum: songMock413_48_16.album)
 
-                let albums = try! service.searchAlbums("f")
+                let albums = try! service.searchAlbums("f", limit: 10)
                 expect(albums).to(haveCount(2))
                 expect(albums).to(contain(3, 48))
             }
@@ -76,9 +76,19 @@ class SearchServiceSpec: QuickSpec {
                 try! service.createIndex(forSong: songMock18_4_3)
                 try! service.createIndex(forSong: songMock413_48_16)
 
-                let songs = try! service.searchSongs("car")
+                let songs = try! service.searchSongs("car", limit: 10)
                 expect(songs).to(haveCount(1))
                 expect(songs.first).to(equal(15))
+            }
+            
+            it("should respect limit") {
+
+                try! service.createIndex(forAlbum: songMock15_3_3.album)
+                try! service.createIndex(forAlbum: songMock17_4_3.album)
+                try! service.createIndex(forAlbum: songMock413_48_16.album)
+
+                let albums = try! service.searchAlbums("f", limit: 1)
+                expect(albums).to(haveCount(1))
             }
 
             it("should remove index for artist") {
@@ -86,7 +96,7 @@ class SearchServiceSpec: QuickSpec {
                 expect { 
                     try service.removeIndex(forArtist: 16) 
                 }.toNot(throwError())
-                expect(try! service.searchArtists("James Quintet")).to(beEmpty())
+                expect(try! service.searchArtists("James Quintet", limit: 10)).to(beEmpty())
             }
 
             it("should remove index for album") {
@@ -94,7 +104,7 @@ class SearchServiceSpec: QuickSpec {
                 expect { 
                     try service.removeIndex(forAlbum: 3)
                 }.toNot(throwError())
-                expect(try! service.searchAlbums("f")).to(beEmpty())
+                expect(try! service.searchAlbums("f", limit: 10)).to(beEmpty())
             }
 
             it("should remove index for song") {
@@ -102,7 +112,7 @@ class SearchServiceSpec: QuickSpec {
                 expect { 
                     try service.removeIndex(forSong: 15)
                 }.toNot(throwError())
-                expect(try! service.searchSongs("car")).to(beEmpty())
+                expect(try! service.searchSongs("car", limit: 10)).to(beEmpty())
             }
             
             it("should clear index") {
@@ -112,9 +122,9 @@ class SearchServiceSpec: QuickSpec {
                 expect {
                     try service.clearIndex()
                 }.toNot(throwError())
-                expect(try! service.searchArtists("James Quintet")).to(beEmpty())
-                expect(try! service.searchAlbums("f")).to(beEmpty())
-                expect(try! service.searchSongs("car")).to(beEmpty())
+                expect(try! service.searchArtists("James Quintet", limit: 10)).to(beEmpty())
+                expect(try! service.searchAlbums("f", limit: 10)).to(beEmpty())
+                expect(try! service.searchSongs("car", limit: 10)).to(beEmpty())
             }
             
             it("should not throw error when indexing the same artist multiple times") {
