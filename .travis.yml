@@ -5,6 +5,5 @@ script:
   - xcodebuild 
     -workspace Pony.xcworkspace 
     -scheme Pony 
-    -sdk iphonesimulator 
     -destination 'platform=iOS Simulator,name=iPhone 5s,OS=10.0' 
     test | xcpretty
