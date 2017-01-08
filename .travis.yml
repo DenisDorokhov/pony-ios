@@ -1,0 +1,4 @@
+language: objective-c
+xcode_workspace: Pony.xcworkspace
+xcode_scheme: PonyTests
+osx_image: xcode8.2

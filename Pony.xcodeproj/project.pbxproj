@@ -126,12 +126,14 @@
 		375B766623AD9D72EA8B368C /* BootstrapServiceDelegateMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BootstrapServiceDelegateMock.swift; sourceTree = "<group>"; };
 		375B7681DE6825FEF3FF7F43 /* MockBuilders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockBuilders.swift; sourceTree = "<group>"; };
 		375B770FECE9AF15BA7F56B9 /* ApiServiceCachedSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiServiceCachedSpec.swift; sourceTree = "<group>"; };
+		375B7805F795F78AB442CA9D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		375B78ABBFE5D26B2A365699 /* SearchService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchService.swift; sourceTree = "<group>"; };
 		375B7949EBF9DD28A86EE343 /* SongDownloadServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongDownloadServiceSpec.swift; sourceTree = "<group>"; };
 		375B7984C6F36411FA2CAD63 /* BootstrapServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BootstrapServiceSpec.swift; sourceTree = "<group>"; };
 		375B799F8C4DAB4AD2620E27 /* AlbumSongs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumSongs.swift; sourceTree = "<group>"; };
 		375B7A23F11D5F2C1F03083E /* ApiServiceMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiServiceMock.swift; sourceTree = "<group>"; };
 		375B7A357527A45B9908FA63 /* SecurityServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityServiceSpec.swift; sourceTree = "<group>"; };
+		375B7B551AD7D57B4938A7D9 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = file.yml; path = .travis.yml; sourceTree = "<group>"; };
 		375B7B97F97E08C0CBE90CE8 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		375B7BCB4007B42FE53F4D9B /* ObservableConvertibleType+PonyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObservableConvertibleType+PonyTests.swift"; sourceTree = "<group>"; };
 		375B7C6374F198239240B549 /* SearchServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchServiceSpec.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 		375B7E7F162B4D35F64106F9 /* song-413_48_16.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "song-413_48_16.json"; sourceTree = "<group>"; };
 		375B7E997E85862713C3E298 /* Installation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Installation.swift; sourceTree = "<group>"; };
 		375B7F10EF7E9D7B47F5BDD7 /* ArtworkUsageCountProviderMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtworkUsageCountProviderMock.swift; sourceTree = "<group>"; };
+		375B7F27029F3F79909ABAA0 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 		5401BAD89B9B43540D25D060 /* Pods_PonyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PonyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4D845E27C8DACCAB30431C0 /* Pods-Pony.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pony.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Pony/Pods-Pony.debug.xcconfig"; sourceTree = "<group>"; };
 		B3D39145FF6B4A31BF3EE82B /* ApiUrlDao.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiUrlDao.swift; sourceTree = "<group>"; };
@@ -213,6 +216,9 @@
 				26286FFF1DC6167C0030107A /* Products */,
 				AB6BE96D1B35DD10A819F5CE /* Pods */,
 				CEB4B6FF7CDD5464BAD0D2D0 /* Frameworks */,
+				375B7B551AD7D57B4938A7D9 /* .travis.yml */,
+				375B7805F795F78AB442CA9D /* README.md */,
+				375B7F27029F3F79909ABAA0 /* .gitignore */,
 			);
 			sourceTree = "<group>";
 		};
