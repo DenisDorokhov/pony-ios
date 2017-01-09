@@ -15,7 +15,7 @@ class SongDownloadServiceSpec: QuickSpec {
         TestUtils.describe("SongDownloadServiceImpl") {
 
             var apiServiceMock: ApiServiceMock!
-            var songService: SongServiceImpl!
+            var songService: SongService!
             var delegate: SongDownloadServiceDelegateMock!
             var service: SongDownloadService!
             beforeEach {
@@ -29,9 +29,9 @@ class SongDownloadServiceSpec: QuickSpec {
                 
                 let storageUrlProvider = StorageUrlProvider()
                 
-                songService = SongServiceImpl(context: SongServiceImpl.Context(), storageUrlProvider: storageUrlProvider, searchService: SearchServiceMock())
+                songService = SongService(context: SongService.Context(), storageUrlProvider: storageUrlProvider, searchService: SearchServiceMock())
                 
-                let artworkService = ArtworkServiceImpl(artworkUsageCountProvider: songService, apiService: apiServiceMock, storageUrlProvider: storageUrlProvider)
+                let artworkService = ArtworkService(artworkUsageCountProvider: songService, apiService: apiServiceMock, storageUrlProvider: storageUrlProvider)
                 
                 delegate = SongDownloadServiceDelegateMock()
                 service = SongDownloadService(apiService: apiServiceMock, artworkService: artworkService, songService: songService, storageUrlProvider: storageUrlProvider)

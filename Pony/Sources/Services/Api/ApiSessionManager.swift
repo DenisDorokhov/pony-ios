@@ -12,9 +12,7 @@ class ApiSessionManager: SessionManager {
     var debug: Bool
 
     init(debug: Bool = false) {
-
         self.debug = debug
-
         super.init()
     }
 

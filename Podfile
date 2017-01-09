@@ -19,7 +19,8 @@ target 'Pony' do
   pod 'SQLite.swift', '0.11.0'
   pod 'STRegex', '0.4.2'
   pod 'SwiftDate', '4.0.7'
-  pod 'Swinject', '2.0.0-beta.2'
+  pod 'Swinject', '2.0.0'
+  pod 'SwinjectStoryboard', '1.0.0'
   pod 'XCGLogger', '4.0.0'
 
   target 'PonyTests' do

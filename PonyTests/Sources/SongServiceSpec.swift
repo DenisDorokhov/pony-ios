@@ -13,14 +13,14 @@ import ObjectMapper
 
 class SongServiceSpec: QuickSpec {
     override func spec() {
-        TestUtils.describe("SongServiceImpl") {
+        TestUtils.describe("SongService") {
 
             var searchServiceMock: SearchServiceMock!
-            var service: SongServiceImpl!
+            var service: SongService!
             beforeEach {
                 TestUtils.cleanAll()
                 searchServiceMock = SearchServiceMock()
-                service = SongServiceImpl(context: SongServiceImpl.Context(), storageUrlProvider: StorageUrlProvider(), searchService: searchServiceMock)
+                service = SongService(context: SongService.Context(), storageUrlProvider: StorageUrlProvider(), searchService: searchServiceMock)
             }
             afterEach {
                 TestUtils.cleanAll()

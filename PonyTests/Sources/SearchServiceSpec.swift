@@ -13,7 +13,7 @@ class SearchServiceSpec: QuickSpec {
 
     override func spec() {
 
-        TestUtils.describe("SongServiceImpl") {
+        TestUtils.describe("SearchServiceImpl") {
 
             var service: SearchServiceImpl!
 

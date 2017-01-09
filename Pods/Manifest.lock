@@ -28,7 +28,9 @@ PODS:
   - SQLite.swift/standard (0.11.0)
   - STRegex (0.4.2)
   - SwiftDate (4.0.7)
-  - Swinject (2.0.0-beta.2)
+  - Swinject (2.0.0)
+  - SwinjectStoryboard (1.0.0):
+    - Swinject (= 2.0.0)
   - XCGLogger (4.0.0):
     - XCGLogger/Core (= 4.0.0)
   - XCGLogger/Core (4.0.0)
@@ -51,7 +53,8 @@ DEPENDENCIES:
   - SQLite.swift (= 0.11.0)
   - STRegex (= 0.4.2)
   - SwiftDate (= 4.0.7)
-  - Swinject (= 2.0.0-beta.2)
+  - Swinject (= 2.0.0)
+  - SwinjectStoryboard (= 1.0.0)
   - XCGLogger (= 4.0.0)
 
 EXTERNAL SOURCES:
@@ -84,9 +87,10 @@ SPEC CHECKSUMS:
   SQLite.swift: 9a26273607d3077a2e5a8d33486e9989f8404c7d
   STRegex: 9b6e0a4300c8442d1aa93241c895eeec4cc56935
   SwiftDate: 0efb04a6751b1ab804049b2b09a69848cd304c12
-  Swinject: 69a893192efa9f2cc44be79ef423d04d571b6af9
+  Swinject: 2e964a80d70ab09b3949c99032711f89147bfd60
+  SwinjectStoryboard: 8e0d3c0202b64172bdf915d55e8dc83d9c4e7863
   XCGLogger: 38063ea89b4c8b23232d18efd2e12eb0005f3ea4
 
-PODFILE CHECKSUM: da5bd3a2ce24d2158ffac1d2b449029d2dc92c42
+PODFILE CHECKSUM: da6d54d6600e690810786742a20f1fa2af08a11b
 
 COCOAPODS: 1.1.1

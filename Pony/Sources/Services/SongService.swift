@@ -6,20 +6,7 @@
 import RxSwift
 import RealmSwift
 
-protocol SongService: class {
-
-    func getArtists() -> Observable<[Artist]>
-    func getArtistAlbums(forArtist artist: Int64) -> Observable<ArtistAlbums>
-    
-    func save(song: Song) -> Observable<Song>
-    func delete(song: Int64) -> Observable<Song>
-
-    func searchArtists(_ query: String) -> Observable<[Artist]>
-    func searchAlbums(_ query: String) -> Observable<[Album]>
-    func searchSongs(_ query: String) -> Observable<[Song]>
-}
-
-class SongServiceImpl: SongService, ArtworkUsageCountProvider {
+class SongService: ArtworkUsageCountProvider {
 
     class Context {
 

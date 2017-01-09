@@ -18,6 +18,7 @@
 		375B7134E8212990985A4A7A /* BootstrapServiceDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B766623AD9D72EA8B368C /* BootstrapServiceDelegateMock.swift */; };
 		375B714FFF8A4DDB63CEA02E /* ObservableConvertibleType+PonyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7BCB4007B42FE53F4D9B /* ObservableConvertibleType+PonyTests.swift */; };
 		375B7223D7812DA1162F0829 /* ApiServiceCached.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B702814F8087D885789CE /* ApiServiceCached.swift */; };
+		375B730E0762B74C58656A06 /* ServiceAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7166A4779ADA64BF235E /* ServiceAssembly.swift */; };
 		375B7329DAF68BF4CF6DF997 /* BootstrapService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B73A1EBF896E871CB2476 /* BootstrapService.swift */; };
 		375B732BEDBB940A9450BF65 /* SongDownloadServiceDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B748B6D40EF70C196223A /* SongDownloadServiceDelegateMock.swift */; };
 		375B737ADEE08F7435329F29 /* SearchServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B71100DD260490B1B8DF9 /* SearchServiceMock.swift */; };
@@ -44,6 +45,7 @@
 		375B7C69AB13A580E61A9843 /* MockBuilders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7681DE6825FEF3FF7F43 /* MockBuilders.swift */; };
 		375B7CBDE31FFAEF34C7E0AC /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B73BB20D659228AADF1E6 /* Credentials.swift */; };
 		375B7CCA2A577D9AC8DC8921 /* PonyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B758E91D3412A03490E11 /* PonyError.swift */; };
+		375B7CCB87F7616949B2E4D9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7D29BF846E8E6F6B9D44 /* main.swift */; };
 		375B7CD65C3513AEB4DD6B71 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B71ACBD2FE2B064D820B5 /* Authentication.swift */; };
 		375B7DBDC4437908E53FA3B8 /* SecurityServiceDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B72FBFB720490C8AFBD54 /* SecurityServiceDelegateMock.swift */; };
 		375B7E7C45D4541982FF5739 /* SecurityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375B7572BED0154D72E9D709 /* SecurityService.swift */; };
@@ -109,6 +111,7 @@
 		375B71100DD260490B1B8DF9 /* SearchServiceMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchServiceMock.swift; sourceTree = "<group>"; };
 		375B714FE45E2B27A41661AF /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		375B715183A52E621333B6D3 /* ApiServiceQueued.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiServiceQueued.swift; sourceTree = "<group>"; };
+		375B7166A4779ADA64BF235E /* ServiceAssembly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceAssembly.swift; sourceTree = "<group>"; };
 		375B71ACBD2FE2B064D820B5 /* Authentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		375B72FBFB720490C8AFBD54 /* SecurityServiceDelegateMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityServiceDelegateMock.swift; sourceTree = "<group>"; };
 		375B7356B93D5D77A61D8A0A /* Artist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
@@ -137,6 +140,7 @@
 		375B7B97F97E08C0CBE90CE8 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		375B7BCB4007B42FE53F4D9B /* ObservableConvertibleType+PonyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObservableConvertibleType+PonyTests.swift"; sourceTree = "<group>"; };
 		375B7C6374F198239240B549 /* SearchServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchServiceSpec.swift; sourceTree = "<group>"; };
+		375B7D29BF846E8E6F6B9D44 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		375B7D31C9BCC9BE35F2765A /* ArtworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtworkService.swift; sourceTree = "<group>"; };
 		375B7D7603321E9B87CBB673 /* ArtistAlbums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistAlbums.swift; sourceTree = "<group>"; };
 		375B7D8B6C76B2B2076707CD /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
@@ -267,6 +271,14 @@
 			path = Dto;
 			sourceTree = "<group>";
 		};
+		375B7E2094B5AF2E6F690F0D /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				375B7166A4779ADA64BF235E /* ServiceAssembly.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
 		AB6BE96D1B35DD10A819F5CE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -311,6 +323,8 @@
 				B3D394F1644AFB55A157FB17 /* Models */,
 				B3D39184D7D43F053C8267D4 /* Services */,
 				B3D3968FF0D48F88A66406EC /* AppDelegate.swift */,
+				375B7D29BF846E8E6F6B9D44 /* main.swift */,
+				375B7E2094B5AF2E6F690F0D /* Assembly */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -719,6 +733,8 @@
 				375B73997EDC5651B9F1D714 /* SearchService.swift in Sources */,
 				375B79A25B5CF4B46A204198 /* SongDownloadService.swift in Sources */,
 				375B76B46C771038AAA1F3E1 /* Delegates.swift in Sources */,
+				375B7CCB87F7616949B2E4D9 /* main.swift in Sources */,
+				375B730E0762B74C58656A06 /* ServiceAssembly.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -852,6 +868,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DISABLE_LOGGING;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};

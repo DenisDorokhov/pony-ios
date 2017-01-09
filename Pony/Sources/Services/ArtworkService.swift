@@ -5,16 +5,11 @@
 
 import RxSwift
 
-protocol ArtworkService: class {
-    func useOrDownload(artwork: Int64, url: String) -> Observable<Int>
-    func releaseOrRemove(artwork: Int64) -> Observable<Int>
-}
-
 protocol ArtworkUsageCountProvider: class {
     func getUsageCount(forArtwork: Int64) -> Observable<Int>
 }
 
-class ArtworkServiceImpl: ArtworkService {
+class ArtworkService {
 
     private class DownloadQueue {
 
